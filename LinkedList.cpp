@@ -69,6 +69,10 @@ void LinkedList::deleteNode(int i)
 
     int count = 0;
     
+    if (i == 0) {
+     head =  head->getNext();
+    }
+
     while(count != i){
 
      if ((count + 1) == i ) {
@@ -103,8 +107,7 @@ int LinkedList::returnSize()
 void LinkedList::printLine()
 { 
       current = head;
-      std::cout << (current->getTile()->getColour());
-    
+
       while(current->getNext() != nullptr)
       {
           current->getTile()->printTile();

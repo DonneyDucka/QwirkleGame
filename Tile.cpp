@@ -17,6 +17,14 @@ Shape Tile::getShape()
   return this->shape;
 }
 
+std::string Tile::getTileDets(){
+
+std::string details = colour + std::to_string(shape);
+
+return details;
+}
+
+
 void Tile::printTile()
 {
   // double f = shape;

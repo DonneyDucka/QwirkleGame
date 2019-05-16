@@ -19,6 +19,7 @@ public:
    int getScore();
    void setScore(int points);
    void resetTurn();
+   LinkedList* getHand();
 
 private:
    LinkedList* hand;

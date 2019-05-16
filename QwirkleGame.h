@@ -7,7 +7,9 @@
 #include "Bag.h"
 #include <string>
 #include <vector>
+#include "TileCodes.h"
 
+typedef char BoardCoor;
 class QwirkleGame {
 
 public:
@@ -15,7 +17,7 @@ public:
 QwirkleGame();
 ~QwirkleGame();
 
-bool placeTile(std::string placement);
+bool placeTile(std::string placement,Player* player);
 void allocatePoints();
 bool replaceTile(std::string replacement);
 void addPlayer(std::string name);
@@ -26,8 +28,8 @@ std::vector<Player*> getPlayers();
 Bag* getBag();
 
 private:
-
-  Tile* board[6][6] = {};
+  int letterToNumber(char a);
+  Tile* board[6][6];
   std::vector<Player*> players;
   Bag* bag;
 };

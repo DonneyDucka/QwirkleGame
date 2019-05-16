@@ -25,23 +25,59 @@ QwirkleGame::QwirkleGame()
 {
   this->bag = new Bag();
   bag->fillBag();
+
+ for (int i = 0; i  < 6; i++) {
+
+   for(int j = 0; j < 6; j++) {
+
+     board[i][j] = nullptr;
+   }
+
+ }
+
 }
 QwirkleGame::~QwirkleGame()
 {
   delete bag;
 }
 
-bool QwirkleGame::placeTile(std::string placement)
-{
-/*
- * We need to create an algorithm so that the columns and rows expand(?) to
- * a maximum of 26. (0 -> 25)
- * placing tile on board, remove from player's hand
- *
- */
+bool QwirkleGame::placeTile(std::string placement, Player* player)
+{ bool check = false;
+  std::string tile = placement.substr(6,2);
+  std::string x = placement.substr(12,1); 
+  std::string y = placement.substr(13,1); 
+  Tile* tileInHand = nullptr;
 
+  if (placement.size() == 14 &&  std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6) {
+   
+   for (int i = 0; i < player->getHand()->returnSize(); i++) {
+      
+      std::cout<< tile << " vs " << player->getHand()->findNode(i)->getTile()->getTileDets();
 
-  return true;
+     if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile ) {
+      
+      tileInHand = player->getHand()->findNode(i)->getTile();
+
+      board[std::atoi(x.c_str())][std::atoi(y.c_str())] = tileInHand;
+      player->getHand()->deleteNode(i);
+
+      std::cout<< tileInHand->getTileDets();
+
+      check = true;
+      break;
+     } 
+    
+   }
+
+  } else if (placement.size() != 14) {
+    std::cout << "you have enter something invalid, please try again." << std::endl;
+  } else if (placement.size() == 14 && tileInHand == nullptr) {
+    std::cout << "The tile you have entered does not exist" << std::endl;
+  } else if (std::atoi(y.c_str()) > 6 && letterToNumber(*x.c_str()) > 6) {
+     std::cout << "The tile you have entered is beyond the boundaries of the board" << std::endl;
+  }
+
+  return check;
 }
 
 void QwirkleGame::allocatePoints()
@@ -109,7 +145,7 @@ void QwirkleGame::printBoard()
       }
       else 
       {
-       board[i][j]->printTile();
+       std::cout << board[i][j]->getTileDets();
       }
       if ( j == 5 ) {
 
@@ -119,6 +155,15 @@ void QwirkleGame::printBoard()
     }
     std::cout << std::endl;
   }
+}
+// board Coordinate converting A = 0, B = 1 ... z = 25
+int QwirkleGame::letterToNumber(char a){
+
+ if (!isupper(static_cast<unsigned char>(a) == false)) {
+ std::toupper(a);
+ } 
+std::cout << (int) a - 65;
+return (int) a - 65 ;
 }
 
 // str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char

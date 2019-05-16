@@ -19,6 +19,7 @@ Tile(Colour colour, Shape shape);
 
 Colour getColour();
 Shape getShape();
+std::string getTileDets();
 
 void printTile();
 

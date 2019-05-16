@@ -42,3 +42,7 @@ void Player::fillHand(Bag* bag) {
  
  } 
  }
+
+ LinkedList* Player::getHand(){
+ return hand;
+ }

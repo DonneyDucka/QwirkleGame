@@ -18,4 +18,14 @@
 #define STAR_6    5
 #define CLOVER    6
 
+// board letters 
+#define A = 0
+#define B = 1
+#define C = 2
+#define D = 3
+#define E = 4
+#define F = 5
+
+
+
 #endif // ASSIGN1_TILECODES_H

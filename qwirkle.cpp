@@ -12,14 +12,17 @@ void studentInfo();
 std::string input;
 std::string playerOne;
 std::string playerTwo;
-    std::string place;
-        std::string place2;
+std::string place;
+std::string place2;
 std::string fileName;
+
 
 int main(void)
 {
     // LinkedList* list = new LinkedList();
     // delete list;
+    int a = 'A';
+    std::cout << a;
     std::cout << std::endl;
     std::cout << "Welcome to Qwirkle!"  << "\n"
               << "--------------------" << std::endl;
@@ -59,15 +62,37 @@ int main(void)
     std::cout << std::endl;
     std::cout << "Starting a New Game" << std::endl;
     std::cout << std::endl;
+    bool capsn1 =  false;
+    bool capsn2 = false;
 
     std::cout << "Enter a name for player 1 (uppercase characters only)" << std::endl;
-    std::cin >> playerOne;
-    std::cout << std::endl;
+    while (capsn1 == false) {
+       bool temp = true;
 
+       std::cin >> playerOne;
+       std::cout << std::endl;
+        for(size_t i = 0; i < playerOne.length(); i++) {
+        if(!isupper(static_cast<unsigned char>(playerOne[i]))) {
+        temp = false;
+        }
+        } 
+    if (temp == false) {std::cout << "Try Again, your name was not in uppercase" << std::endl;}
+       capsn1 = temp;
+   } 
     std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
+   
+   while (capsn2 == false) {
+    bool temp = true;
     std::cin >> playerTwo;
     std::cout << std::endl;
-
+        for(size_t i = 0; i < playerTwo.length(); i++) {
+        if(!isupper(static_cast<unsigned char>(playerTwo[i]))) {
+        temp = false;
+        }
+        } 
+       if (temp == false) {std::cout << "Try Again, your name was not in uppercase" << std::endl;}
+       capsn2 = temp;
+   } 
     std::cout << "Let's Play!" << std::endl;
     std::cout << std::endl;
 
@@ -101,7 +126,20 @@ int main(void)
         std::cout << "Your hand is.." << std::endl;
         
         player->printHand();
+
+        std::string playerMove;
+        std::cout << "Place your tile : " << std::endl;
+        std::cin >> playerMove;
+        playerMove.ignore();
+
+
+        std::cout << playerMove.length();
+        
+        g->placeTile(playerMove, player);
+        g->printBoard();
+
        }
+
        break;
     }
   }
