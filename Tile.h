@@ -3,6 +3,8 @@
 #define ASSIGN2_TILE_H
 
 #include <string>
+#include "TileCodes.h"
+#include <iostream>
 
 // Define a Colour type
 typedef char Colour;
@@ -18,7 +20,7 @@ Tile(Colour colour, Shape shape);
 Colour getColour();
 Shape getShape();
 
-std::string printTile();
+void printTile();
 
 /* i made these private? they were in public */
 private:

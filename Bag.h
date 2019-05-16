@@ -12,13 +12,14 @@ public:
 Bag();
 
 void fillBag();
-
+void shuffleBag();
 Tile* pickFromBag();
 LinkedList* getList();
 int getSize();
 private:
   //must be stored as an ordered linked list
 LinkedList* tileList;
+int randomGeneration(int min, int max);
 
 };
 

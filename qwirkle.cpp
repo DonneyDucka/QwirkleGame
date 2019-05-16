@@ -72,32 +72,38 @@ int main(void)
     std::cout << std::endl;
 
     QwirkleGame* g = new QwirkleGame();
-    std::cout << "adding player one" << std::endl;
+    
+    //ADDING PLAYERS
     g->addPlayer(playerOne);
-    std::cout << "player one added" << std::endl;
-    std::cout << "adding player two" << std::endl;
     g->addPlayer(playerTwo);
-    std::cout << "player two added" << std::endl;
-    std::cout << "attemping to print board" << std::endl;
+     
+     //Shuffling the bag
+    g->getBag()->shuffleBag();
+    g->fillPlayerHands();
 
-    g->printBoard();
-    std::cout << "printing board added" << std::endl;
+    while( g->getBag()->getSize()!=0) 
+    {
+      for (Player* player : g->getPlayers()) 
+       {
 
-        // std::cout << "attempting to add a bag" << std::endl;
-        // Bag* b = new Bag();
-        // std::cout << "bag added" << std::endl;
-        //
-        // b->fillBag();
-        // std::cout << "filled bag" << std::endl;
-        // b->getList()->printLine();
-        std::cout << "print size" << std::endl;
-        std::cout << g->getBag()->getSize() << std::endl;
-        std::cout << "lalallalalalal" << std::endl;
-        g->getBag()->getList()->printLine();
+        std::cout << player->getName() << ", it's your turn" << '\n' <<std::endl;
 
-    std::cout << "now deleting game board" << std::endl;
-    delete g;
-    // delete b;
+         //Displaying the scoreboard 
+        for(Player* playerlist: g-> getPlayers()) {
+
+          std::cout << playerlist->getName()<<"'s score: " << playerlist->getScore() << std::endl;
+        }
+
+        g->printBoard();
+
+        std::cout << std::endl;
+
+        std::cout << "Your hand is.." << std::endl;
+        
+        player->printHand();
+       }
+       break;
+    }
   }
 
   void loadGame()

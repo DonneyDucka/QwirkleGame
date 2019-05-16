@@ -3,8 +3,8 @@
 
 Tile::Tile(Colour colour, Shape shape)
 {
-  colour = colour;
-  shape = shape;
+  this->colour = colour;
+  this->shape = shape;
 }
 
 Colour Tile::getColour()
@@ -17,12 +17,9 @@ Shape Tile::getShape()
   return this->shape;
 }
 
-std::string Tile::printTile()
+void Tile::printTile()
 {
   // double f = shape;
-  std::string create = this->colour + std::to_string(this->shape);
-
-
-  
-  return create;
+ std::cout << colour << shape;
+ 
 }

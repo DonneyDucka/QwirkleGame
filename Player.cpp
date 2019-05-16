@@ -2,14 +2,19 @@
 #include "Player.h"
 
 //TODO  Implement the player
-Player::Player(LinkedList* playersHand, std::string name, int score)
+Player::Player(std::string name, int score)
 {
-  hand = nullptr;
+  hand = new LinkedList();
   playerName = name;
-  score = score;
+  this->score = score;
 }
 
-void Player::getHand()
+int Player::countTilesInHand()
+{
+  return hand->returnSize();
+}
+
+void Player::printHand()
 {
   return hand->printLine();
 }
@@ -26,5 +31,14 @@ int Player::getScore()
 
 void Player::setScore(int points)
 {
-  score = score + points;
+  score += points;
 }
+
+void Player::fillHand(Bag* bag) {
+ 
+ for (int i = 0; i < 7; i++) {
+   
+   hand->addNode(bag->pickFromBag());
+ 
+ } 
+ }

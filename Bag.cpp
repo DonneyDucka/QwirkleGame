@@ -1,5 +1,6 @@
 
 #include "Bag.h"
+#include <random>
 
 Bag::Bag()
 {
@@ -9,50 +10,54 @@ Bag::Bag()
 
 void Bag::fillBag()
 {
-    Tile* t;
-    Colour c;
-    // Iterate through colours
-    for (int i = 0; i < 3; i++)
+  Tile *t;
+  // Iterate through colours
+  for (int i = 0; i < 3; i++)
+  {
+    for (int i = 1; i <= 6; i++)
     {
-      for (int i = 1; i <= 6; i++)
-      {
-
-        c = 'R';
-        t = new Tile(c, i);
-        tileList->addNode(t);
-
-        c = 'O';
-        t = new Tile(c, i);
-        tileList->addNode(t);
-
-        c = 'Y';
-        t = new Tile(c, i);
-        tileList->addNode(t);
-
-        c = 'G';
-        t = new Tile(c, i);
-        tileList->addNode(t);
-
-        c = 'B';
-        t = new Tile(c, i);
-        tileList->addNode(t);
-
-        c = 'P';
-        t = new Tile(c, i);
-        tileList->addNode(t);
-      }
+      t = new Tile(RED, i);
+      tileList->addNode(t);
+      
+      t = new Tile(ORANGE, i);
+      tileList->addNode(t);
+     
+      t = new Tile(YELLOW, i);
+      tileList->addNode(t);
+      
+      t = new Tile(GREEN, i);
+      tileList->addNode(t);
+          
+      t = new Tile(BLUE, i);
+      tileList->addNode(t);
+  
+      t = new Tile(PURPLE, i);
+      tileList->addNode(t);
     }
-    delete t;
+  }
+   
+}
+void Bag::shuffleBag()
+{      
+   for (int i = 0; i < 108; i++) {
+     int random  = randomGeneration(0,107);
+     if (random  == 0) {
+      tileList->addBack(tileList->findNode(random)->getTile());
+      tileList->deleteFront();
+     } else {
+       tileList->addBack(tileList->findNode(random)->getTile());
+       tileList->deleteNode(random);
+     }
+   }
+
 }
 
 Tile* Bag::pickFromBag()
 {
 
-    int i = rand() % tileList->returnSize();
-    Tile* add = tileList->findNode(i);
-
-    tileList->deleteNode(add);
-    return add;
+  Tile* add = tileList->findNode(1)->getTile();
+  tileList->deleteFront();
+  return add;
 
 }
 
@@ -64,4 +69,18 @@ LinkedList* Bag::getList()
 int Bag::getSize()
 {
   return tileList->returnSize();
+}
+
+int Bag::randomGeneration(int min, int max) {
+
+   std::random_device engine;
+   std::uniform_int_distribution<int> uniform_dist(min, max);
+    
+    int randomNo = 0;
+  for (int i = 0; i != max; ++i) {
+
+    randomNo = uniform_dist(engine);
+
+  }
+return randomNo;
 }

@@ -15,11 +15,14 @@ public:
    //only adds node at the end
    void addNode(Tile* a);
    //find the Node
-   Tile* findNode(int f);
+   Node* findNode(int f);
    //only deletes node of where it is
-   void deleteNode(Tile* d);
-
+   void deleteNode(int i);
+   void deleteBack();
+   void deleteFront();
+   void addBack(Tile* data);
    int returnSize();
+   void swapNodes(int from, int to);
 
    void printLine();
 
@@ -29,7 +32,7 @@ private:
    NodePtr head;
    NodePtr current;
    NodePtr tail;
-   NodePtr temp;
+   int numOfNodes;
 };
 
 #endif // ASSIGN2_LINKEDLIST_H

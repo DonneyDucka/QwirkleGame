@@ -23,12 +23,9 @@
 
 QwirkleGame::QwirkleGame()
 {
-  bag = new Bag();
+  this->bag = new Bag();
   bag->fillBag();
-  
-board = {};
-};
-
+}
 QwirkleGame::~QwirkleGame()
 {
   delete bag;
@@ -72,22 +69,56 @@ Bag* QwirkleGame::getBag()
 
 void QwirkleGame::addPlayer(std::string name)
 {
-  LinkedList* newHand = new LinkedList();
-  Player* p = new Player(newHand, name, 0);
+  Player* p = new Player(name, 0);
   players.push_back(p);
 }
 
+std::vector<Player*> QwirkleGame::getPlayers()
+{
+  return players;
+}
+
+void QwirkleGame::fillPlayerHands(){
+  
+  for (int i = 0; i < players.size();i++) {
+  
+   players.at(i)->fillHand(bag);
+
+  }
+}
 void QwirkleGame::printBoard()
 {
-  std::cout << board << std::endl;
-  // for (int i = 0; i < 6; i++)
-  // {
-  //   for (int j = 0; j < 6; j++)
-  //   {
-  //       std::cout << board[i][j];
-  //   }
-  //   std::cout << std::endl;
-  // }
+  std::cout << "  0  1  2  3  4  5  " << std::endl;
+  std::cout << " ------------------- " << std::endl;
+  char a = 'A';
+  for (int i = 0; i < 6; i++)
+  {
+     
+    for (int j = 0; j < 6; j++)
+    {
+      if(j == 0)
+      {      
+        std::cout << a;
+        a++;
+      } 
+      std::cout << "|";
+
+      if(board[i][j] == nullptr)
+      {
+         std::cout <<"  ";
+      }
+      else 
+      {
+       board[i][j]->printTile();
+      }
+      if ( j == 5 ) {
+
+        std::cout << "|";
+        
+      }
+    }
+    std::cout << std::endl;
+  }
 }
 
 // str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char
