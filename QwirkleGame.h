@@ -10,32 +10,28 @@
 #include "TileCodes.h"
 
 typedef char BoardCoor;
-class QwirkleGame {
+class QwirkleGame
+{
 
 public:
+  QwirkleGame();
+  ~QwirkleGame();
 
-QwirkleGame();
-~QwirkleGame();
+  bool placeTile(std::string placement, Player *player);
+  void allocatePoints();
+  bool replaceTile(std::string replacement);
+  void addPlayer(std::string name);
+  void fillPlayerHands();
+  void printBoard();
+  std::vector<Player *> getPlayers();
 
-bool placeTile(std::string placement,Player* player);
-void allocatePoints();
-bool replaceTile(std::string replacement);
-void addPlayer(std::string name);
-void fillPlayerHands();
-void printBoard();
-std::vector<Player*> getPlayers();
-
-Bag* getBag();
+  Bag *getBag();
 
 private:
   int letterToNumber(char a);
-  Tile* board[6][6];
-  std::vector<Player*> players;
-  Bag* bag;
+  Tile *board[6][6];
+  std::vector<Player *> players;
+  Bag *bag;
 };
-
-
-
-
 
 #endif // ASSIGN2_QWIRKLEGAME_H

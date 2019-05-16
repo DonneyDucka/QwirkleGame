@@ -5,7 +5,6 @@
 Bag::Bag()
 {
   tileList = new LinkedList();
-  std::cout << getSize(); //debug
 } //END OF CONSTRUCTOR
 
 void Bag::fillBag()
@@ -18,50 +17,51 @@ void Bag::fillBag()
     {
       t = new Tile(RED, i);
       tileList->addNode(t);
-      
+
       t = new Tile(ORANGE, i);
       tileList->addNode(t);
-     
+
       t = new Tile(YELLOW, i);
       tileList->addNode(t);
-      
+
       t = new Tile(GREEN, i);
       tileList->addNode(t);
-          
+
       t = new Tile(BLUE, i);
       tileList->addNode(t);
-  
+
       t = new Tile(PURPLE, i);
       tileList->addNode(t);
     }
   }
-   
 }
 void Bag::shuffleBag()
-{      
-   for (int i = 0; i < 108; i++) {
-     int random  = randomGeneration(0,107);
-     if (random  == 0) {
+{
+  for (int i = 0; i < 108; i++)
+  {
+    int random = randomGeneration(0, 107);
+    if (random == 0)
+    {
       tileList->addBack(tileList->findNode(random)->getTile());
       tileList->deleteFront();
-     } else {
-       tileList->addBack(tileList->findNode(random)->getTile());
-       tileList->deleteNode(random);
-     }
-   }
-
+    }
+    else
+    {
+      tileList->addBack(tileList->findNode(random)->getTile());
+      tileList->deleteNode(random);
+    }
+  }
 }
 
-Tile* Bag::pickFromBag()
+Tile *Bag::pickFromBag()
 {
 
-  Tile* add = tileList->findNode(1)->getTile();
+  Tile *add = tileList->findNode(1)->getTile();
   tileList->deleteFront();
   return add;
-
 }
 
-LinkedList* Bag::getList()
+LinkedList *Bag::getList()
 {
   return tileList;
 }
@@ -71,16 +71,17 @@ int Bag::getSize()
   return tileList->returnSize();
 }
 
-int Bag::randomGeneration(int min, int max) {
+int Bag::randomGeneration(int min, int max)
+{
 
-   std::random_device engine;
-   std::uniform_int_distribution<int> uniform_dist(min, max);
-    
-    int randomNo = 0;
-  for (int i = 0; i != max; ++i) {
+  std::random_device engine;
+  std::uniform_int_distribution<int> uniform_dist(min, max);
+
+  int randomNo = 0;
+  for (int i = 0; i != max; ++i)
+  {
 
     randomNo = uniform_dist(engine);
-
   }
-return randomNo;
+  return randomNo;
 }

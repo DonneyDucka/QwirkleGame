@@ -26,55 +26,59 @@ QwirkleGame::QwirkleGame()
   this->bag = new Bag();
   bag->fillBag();
 
- for (int i = 0; i  < 6; i++) {
+  for (int i = 0; i < 6; i++)
+  {
 
-   for(int j = 0; j < 6; j++) {
+    for (int j = 0; j < 6; j++)
+    {
 
-     board[i][j] = nullptr;
-   }
-
- }
-
+      board[i][j] = nullptr;
+    }
+  }
 }
 QwirkleGame::~QwirkleGame()
 {
   delete bag;
 }
 
-bool QwirkleGame::placeTile(std::string placement, Player* player)
-{ bool check = false;
-  std::string tile = placement.substr(6,2);
-  std::string x = placement.substr(12,1); 
-  std::string y = placement.substr(13,1); 
-  Tile* tileInHand = nullptr;
+bool QwirkleGame::placeTile(std::string placement, Player *player)
+{
+  bool check = false;
+  std::string tile = placement.substr(6, 2);
+  std::string x = placement.substr(12, 1);
+  std::string y = placement.substr(13, 1);
+  Tile *tileInHand = nullptr;
 
-  if (placement.size() == 14 &&  std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6) {
-   
-   for (int i = 0; i < player->getHand()->returnSize(); i++) {
-      
-      std::cout<< tile << " vs " << player->getHand()->findNode(i)->getTile()->getTileDets();
+  if (placement.size() == 14 && std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6)
+  {
 
-     if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile ) {
-      
-      tileInHand = player->getHand()->findNode(i)->getTile();
+    for (int i = 0; i < player->getHand()->returnSize(); i++)
+    {
 
-      board[std::atoi(x.c_str())][std::atoi(y.c_str())] = tileInHand;
-      player->getHand()->deleteNode(i);
+      if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile)
+      {
 
-      std::cout<< tileInHand->getTileDets();
+        tileInHand = player->getHand()->findNode(i)->getTile();
 
-      check = true;
-      break;
-     } 
-    
-   }
+        board[std::atoi(x.c_str())][std::atoi(y.c_str())] = tileInHand;
+        player->getHand()->deleteNode(i);
 
-  } else if (placement.size() != 14) {
-    std::cout << "you have enter something invalid, please try again." << std::endl;
-  } else if (placement.size() == 14 && tileInHand == nullptr) {
+        check = true;
+        break;
+      }
+    }
+  }
+  else if (placement.size() != 14)
+  {
+    std::cout << "You have enter something invalid, please try again." << std::endl;
+  }
+  else if (placement.size() == 14 && tileInHand == nullptr)
+  {
     std::cout << "The tile you have entered does not exist" << std::endl;
-  } else if (std::atoi(y.c_str()) > 6 && letterToNumber(*x.c_str()) > 6) {
-     std::cout << "The tile you have entered is beyond the boundaries of the board" << std::endl;
+  }
+  else if (std::atoi(y.c_str()) > 6 && letterToNumber(*x.c_str()) > 6)
+  {
+    std::cout << "The tile you have entered is beyond the boundaries of the board" << std::endl;
   }
 
   return check;
@@ -84,7 +88,6 @@ void QwirkleGame::allocatePoints()
 {
   //TO BE IMPLEMENTED, NEED TO GET POINTS FOR COMBO,
   // SUCH AS THE HORIZONTAL RUN AND VERTICAL RUN
-
 }
 
 bool QwirkleGame::replaceTile(std::string replacement)
@@ -94,32 +97,32 @@ bool QwirkleGame::replaceTile(std::string replacement)
    *                                then first tile should be replaced.
    */
 
-
   return true;
 }
 
-Bag* QwirkleGame::getBag()
+Bag *QwirkleGame::getBag()
 {
   return bag;
 }
 
 void QwirkleGame::addPlayer(std::string name)
 {
-  Player* p = new Player(name, 0);
+  Player *p = new Player(name, 0);
   players.push_back(p);
 }
 
-std::vector<Player*> QwirkleGame::getPlayers()
+std::vector<Player *> QwirkleGame::getPlayers()
 {
   return players;
 }
 
-void QwirkleGame::fillPlayerHands(){
-  
-  for (int i = 0; i < players.size();i++) {
-  
-   players.at(i)->fillHand(bag);
+void QwirkleGame::fillPlayerHands()
+{
 
+  for (int i = 0; i < players.size(); i++)
+  {
+
+    players.at(i)->fillHand(bag);
   }
 }
 void QwirkleGame::printBoard()
@@ -129,41 +132,43 @@ void QwirkleGame::printBoard()
   char a = 'A';
   for (int i = 0; i < 6; i++)
   {
-     
+
     for (int j = 0; j < 6; j++)
     {
-      if(j == 0)
-      {      
+      if (j == 0)
+      {
         std::cout << a;
         a++;
-      } 
+      }
       std::cout << "|";
 
-      if(board[i][j] == nullptr)
+      if (board[i][j] == nullptr)
       {
-         std::cout <<"  ";
+        std::cout << "  ";
       }
-      else 
+      else
       {
-       std::cout << board[i][j]->getTileDets();
+        std::cout << board[i][j]->getTileDets();
       }
-      if ( j == 5 ) {
+      if (j == 5)
+      {
 
         std::cout << "|";
-        
       }
     }
     std::cout << std::endl;
   }
 }
 // board Coordinate converting A = 0, B = 1 ... z = 25
-int QwirkleGame::letterToNumber(char a){
+int QwirkleGame::letterToNumber(char a)
+{
 
- if (!isupper(static_cast<unsigned char>(a) == false)) {
- std::toupper(a);
- } 
-std::cout << (int) a - 65;
-return (int) a - 65 ;
+  if (!isupper(static_cast<unsigned char>(a) == false))
+  {
+    std::toupper(a);
+  }
+  std::cout << (int)a - 65;
+  return (int)a - 65;
 }
 
 // str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char

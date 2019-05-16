@@ -26,6 +26,4 @@
 #define E = 4
 #define F = 5
 
-
-
 #endif // ASSIGN1_TILECODES_H
