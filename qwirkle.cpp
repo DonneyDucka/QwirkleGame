@@ -61,7 +61,7 @@ int main(void)
     }
   }
   return EXIT_SUCCESS;
-} 
+}
 
 void newGame()
 {
@@ -177,15 +177,30 @@ void newGame()
       //Reading in player input
       std::string string1, string2;
       std::getline(std::cin >> string1, string2);
-      std::string playerMove = string1 + string2;
+      for (int i = 0; i < string1.length(); i++)
+      {
+        std::tolower(string1[i]);
+      }
 
       //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
-      g->placeTile(playerMove, player);
+      if (string1 == "place")
+      {
+        g->placeTile(string2, player);
+      }
+      else if (string1 == "replace")
+      {
+        g->replaceTile(string2, player);
+      }
+      else if (string1.compare("SAVE"))
+      {
+        saveGame();
+      }
+        player->printHand();
 
-      //Reprinting the board 
+      //Reprinting the board
       g->printBoard();
     }
-    //DELETE later - no breaks are allowed 
+    //DELETE later - no breaks are allowed
     break;
   }
 }
@@ -205,7 +220,6 @@ void loadGame()
 
 void saveGame()
 {
-
 }
 
 //Method displays student info

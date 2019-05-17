@@ -21,6 +21,7 @@ public:
    void deleteBack();
    void deleteFront();
    void addBack(Tile* data);
+   void addAt(int i, Node* data);
    int returnSize();
    void swapNodes(int from, int to);
 

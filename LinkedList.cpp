@@ -53,6 +53,34 @@ Node* LinkedList::findNode(int f)
   return temp;
 }
 
+void LinkedList::addAt(int i, Node* node) {
+ 
+
+ if ( i > 0 && head != nullptr) { 
+ int prev  = i - 1;
+ findNode(prev)->setNext(node);
+ node->setNext(findNode(i));
+ 
+ numOfNodes++;
+ } else if (i == 0 && head != nullptr){
+   
+   node->setNext(head);
+   head = node;
+   numOfNodes++;
+ } else if (head == nullptr) {
+   node->setNext(nullptr);
+   head = node;
+   tail = node;
+    numOfNodes++;
+ } else if( i == numOfNodes) {
+    node->setNext(nullptr);
+    tail->setNext(node);
+    tail = node;
+    numOfNodes++;
+ }
+
+}
+
 void LinkedList::addBack(Tile* data){
   
     Node* newNode = new Node(data, nullptr);
@@ -93,9 +121,8 @@ tail->setNext(nullptr);
 }
 
 void LinkedList::deleteFront(){
-
+  
    head = head->getNext();
-
 }
 
 int LinkedList::returnSize()

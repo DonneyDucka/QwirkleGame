@@ -44,12 +44,12 @@ QwirkleGame::~QwirkleGame()
 bool QwirkleGame::placeTile(std::string placement, Player *player)
 {
   bool check = false;
-  std::string tile = placement.substr(6, 2);
-  std::string x = placement.substr(12, 1);
-  std::string y = placement.substr(13, 1);
+  std::string tile = placement.substr(1, 2);
+  std::string x = placement.substr(6, 1);
+  std::string y = placement.substr(7, 1);
   Tile *tileInHand = nullptr;
-
-  if (placement.size() == 14 && std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6)
+  
+  if (std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6)
   {
 
     for (int i = 0; i < player->getHand()->returnSize(); i++)
@@ -68,11 +68,7 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
       }
     }
   }
-  else if (placement.size() != 14)
-  {
-    std::cout << "You have enter something invalid, please try again." << std::endl;
-  }
-  else if (placement.size() == 14 && tileInHand == nullptr)
+  else if (tileInHand == nullptr)
   {
     std::cout << "The tile you have entered does not exist" << std::endl;
   }
@@ -90,14 +86,36 @@ void QwirkleGame::allocatePoints()
   // SUCH AS THE HORIZONTAL RUN AND VERTICAL RUN
 }
 
-bool QwirkleGame::replaceTile(std::string replacement)
+bool QwirkleGame::replaceTile(std::string replacement, Player* player)
 {
   /*  - replace a tile (in their hand) -> remove tile from player hand,
    *                               IF player has two tiles in same name,
    *                                then first tile should be replaced.
    */
+  Tile *tileInHand = nullptr;
+  bool check = false;
+  std::string tile = replacement.substr(1,2);
+  if (replacement.length() == 3)
+  {
+    for (int i = 0; i < player->getHand()->returnSize(); i++)
+    {
 
-  return true;
+      if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile)
+      {
+        tileInHand = player->getHand()->findNode(i)->getTile();
+        bag->getList()->addBack(tileInHand);
+        Node* pickedTile = bag->getList()->findNode(1);
+        player->getHand()->addAt(i,pickedTile);
+        bag->getList()->deleteFront();
+        player->getHand()->deleteNode(i);
+        check = true;
+      }
+    }
+  } else if (tileInHand == nullptr) {
+    std::cout << "You have entered an invalid tile";
+  } 
+
+  return check;
 }
 
 Bag *QwirkleGame::getBag()
