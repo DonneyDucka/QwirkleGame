@@ -48,10 +48,9 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   std::string x = placement.substr(6, 1);
   std::string y = placement.substr(7, 1);
   Tile *tileInHand = nullptr;
-  
+
   if (std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6)
   {
-
     for (int i = 0; i < player->getHand()->returnSize(); i++)
     {
 
@@ -61,6 +60,7 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
         tileInHand = player->getHand()->findNode(i)->getTile();
 
         board[std::atoi(x.c_str())][std::atoi(y.c_str())] = tileInHand;
+        std::cout << x << y;
         player->getHand()->deleteNode(i);
 
         check = true;
@@ -86,34 +86,40 @@ void QwirkleGame::allocatePoints()
   // SUCH AS THE HORIZONTAL RUN AND VERTICAL RUN
 }
 
-bool QwirkleGame::replaceTile(std::string replacement, Player* player)
+bool QwirkleGame::replaceTile(std::string replacement, Player *player)
 {
   /*  - replace a tile (in their hand) -> remove tile from player hand,
    *                               IF player has two tiles in same name,
    *                                then first tile should be replaced.
    */
+
   Tile *tileInHand = nullptr;
   bool check = false;
-  std::string tile = replacement.substr(1,2);
+  std::string tile = replacement.substr(1, 2);
+
   if (replacement.length() == 3)
   {
-    for (int i = 0; i < player->getHand()->returnSize(); i++)
+    for (int k = 0; k < player->getHand()->returnSize(); k++)
     {
-
-      if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile)
+      if (player->getHand()->findNode(k)->getTile()->getTileDets() == tile)
       {
-        tileInHand = player->getHand()->findNode(i)->getTile();
+        std::cout << k << " : " << std::endl;
+        std::cout << player->getHand()->returnSize() << std::endl;
+
+        std::cout << "deleting the tile " << std::endl;
+        tileInHand = player->getHand()->findNode(k)->getTile();
         bag->getList()->addBack(tileInHand);
-        Node* pickedTile = bag->getList()->findNode(1);
-        player->getHand()->addAt(i,pickedTile);
-        bag->getList()->deleteFront();
-        player->getHand()->deleteNode(i);
+        player->getHand()->deleteNode(k);
+        Node *pickedTile = bag->pickFromBag();
+        player->getHand()->addAt(k,pickedTile);
         check = true;
       }
     }
-  } else if (tileInHand == nullptr) {
+  }
+  else if (tileInHand == nullptr)
+  {
     std::cout << "You have entered an invalid tile";
-  } 
+  }
 
   return check;
 }

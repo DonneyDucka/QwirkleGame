@@ -36,11 +36,12 @@ void Player::setScore(int points)
 
 void Player::fillHand(Bag* bag) {
  
- for (int i = 0; i < 7; i++) {
-   
-   hand->addNode(bag->pickFromBag());
- 
+ for (int i = 0; i < 6; i++) {
+  
+   hand->addNode(bag->pickFromBag()->getTile());
+
  } 
+
  }
 
  LinkedList* Player::getHand(){

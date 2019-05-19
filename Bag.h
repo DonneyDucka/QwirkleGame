@@ -13,7 +13,7 @@ Bag();
 
 void fillBag();
 void shuffleBag();
-Tile* pickFromBag();
+Node* pickFromBag();
 LinkedList* getList();
 int getSize();
 private:

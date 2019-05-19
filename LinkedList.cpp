@@ -45,7 +45,8 @@ void LinkedList::addNode(Tile* a)
 Node* LinkedList::findNode(int f)
 {
  Node* temp = head;
-  for(int count = 1; count <= f; ++count) {
+
+  for(int count = 1; count <= f; count++) {
 
    temp = temp->getNext();
 
@@ -54,29 +55,17 @@ Node* LinkedList::findNode(int f)
 }
 
 void LinkedList::addAt(int i, Node* node) {
- 
 
- if ( i > 0 && head != nullptr) { 
- int prev  = i - 1;
- findNode(prev)->setNext(node);
- node->setNext(findNode(i));
- 
+ if ( i > 0 && i < numOfNodes - 1) { 
+      Node* ka = findNode(i);
+        findNode(i-1)->setNext(node);
+        findNode(i-1)->getNext()->setNext(ka);
  numOfNodes++;
+
  } else if (i == 0 && head != nullptr){
-   
    node->setNext(head);
    head = node;
    numOfNodes++;
- } else if (head == nullptr) {
-   node->setNext(nullptr);
-   head = node;
-   tail = node;
-    numOfNodes++;
- } else if( i == numOfNodes) {
-    node->setNext(nullptr);
-    tail->setNext(node);
-    tail = node;
-    numOfNodes++;
  }
 
 }
@@ -92,37 +81,33 @@ void LinkedList::addBack(Tile* data){
 }
 /* delete selected tile pointer */
 void LinkedList::deleteNode(int i)
-{
-   current = head;
-
-    int count = 0;
-    
+{   
     if (i == 0) {
-     head =  head->getNext();
+     head = head->getNext();
+    } else if (i == numOfNodes - 1)    
+    {
+      deleteBack();
     }
-
-    while(count != i){
-
-     if ((count + 1) == i ) {
-       
-       findNode(count)->setNext(findNode(i+1));
-     }
-     count++;
-    }
+    else {
+    findNode(i-1)->setNext(findNode(i+1));
+    } 
 
  numOfNodes--;
 }
 
 void LinkedList::deleteBack(){
 
-tail = findNode(numOfNodes - 1);
+tail = findNode(numOfNodes - 2);
 tail->setNext(nullptr);
+numOfNodes--;
 
 }
 
 void LinkedList::deleteFront(){
-  
+   Node* temp = head;
    head = head->getNext();
+   free(temp);
+   numOfNodes--;
 }
 
 int LinkedList::returnSize()
@@ -138,9 +123,14 @@ void LinkedList::printLine()
       while(current->getNext() != nullptr)
       {
           current->getTile()->printTile();
-         if(current->getNext()->getNext() != nullptr) 
+         
+          if(current->getNext()->getNext() != nullptr) 
           {
-          std::cout <<", " ;
+          std::cout <<", ";
+          } 
+          if (current->getNext()->getNext() == nullptr) {
+            std::cout <<", "; 
+            current->getNext()->getTile()->printTile();
           }
           current = current->getNext();
       }

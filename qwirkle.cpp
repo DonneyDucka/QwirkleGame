@@ -128,7 +128,7 @@ void newGame()
   //Shuffling the bag
   g->getBag()->shuffleBag();
   g->fillPlayerHands();
-
+  
   //GameEngine commences
 
   /* 
@@ -188,7 +188,7 @@ void newGame()
         g->placeTile(string2, player);
       }
       else if (string1 == "replace")
-      {
+      { 
         g->replaceTile(string2, player);
       }
       else if (string1.compare("SAVE"))

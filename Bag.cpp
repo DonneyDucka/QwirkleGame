@@ -53,10 +53,10 @@ void Bag::shuffleBag()
   }
 }
 
-Tile *Bag::pickFromBag()
+Node *Bag::pickFromBag()
 {
 
-  Tile *add = tileList->findNode(1)->getTile();
+  Node *add = tileList->findNode(0);
   tileList->deleteFront();
   return add;
 }
