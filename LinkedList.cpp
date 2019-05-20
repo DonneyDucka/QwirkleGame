@@ -57,14 +57,14 @@ Node *LinkedList::findNode(int f)
 void LinkedList::addAt(int i, Node *node)
 {
   if (i > 0 && i < numOfNodes - 1)
-  { std::cout << "running1";
+  { 
     Node *ka = findNode(i);
     findNode(i - 1)->setNext(node);
     findNode(i - 1)->getNext()->setNext(ka);
     numOfNodes++;
   }
   else if (i == 0 && head != nullptr)
-  { std::cout << "running2";
+  { 
     node->setNext(head);
     head = node;
     numOfNodes++;

@@ -192,7 +192,7 @@ void newGame()
       //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
       if (string1 == "place")
       {
-        g->placeTile(string2, player);
+        while (!g->placeTile(string2, player));
       }
       else if (string1 == "replace")
       { 
@@ -209,7 +209,7 @@ void newGame()
         {
           outfile << p->getName() << "\n";
           outfile << p->getScore() << "\n";
-          
+
           for(int i = 0; i < p->getHand()->returnSize(); i++)
           {
             if(i != p->getHand()->returnSize() - 1)
@@ -247,12 +247,12 @@ void newGame()
 
        }
 
-        player->printHand();
+       //Debugging
+      player->printHand();
+
       //Reprinting the board
       g->printBoard();
     }
-    //DELETE later - no breaks are allowed
-    break;
   }
 }
 
@@ -265,7 +265,14 @@ void loadGame()
   std::cout << "Enter the filename from which to load a game" << std::endl;
   std::cin >> fileName;
 
-  readIn(fileName);
+  std::ifstream infile;
+
+  infile.open(fileName+".txt");
+
+  if (!infile)
+  {
+    std::cout << "File was not opened";
+  }
 
   // infile.open("david.txt");
 

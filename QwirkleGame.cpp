@@ -64,6 +64,8 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
           board[x2n][std::atoi(y.c_str())] = tileInHand;
           player->getHand()->deleteNode(i);
           allocatePoints(x2n, y2n, player);
+          player->getHand()->addAt(i,bag->getList()->findNode(0));
+          bag->getList()->deleteFront();
           check = true;
         }
         else
@@ -160,7 +162,6 @@ bool QwirkleGame::replaceTile(std::string replacement, Player *player)
     {
       if (player->getHand()->findNode(k)->getTile()->getTileDets() == tile)
       {
-        std::cout << "deleting the tile " << std::endl;
         tileInHand = player->getHand()->findNode(k)->getTile();
         bag->getList()->addBack(tileInHand);
         player->getHand()->deleteNode(k);
@@ -250,7 +251,6 @@ int QwirkleGame::letterToNumber(char word)
 
   if (!isupper(static_cast<unsigned char>(word)) == true)
   {
-    std::cout << "converted" << std::endl;
     x = std::tolower(word);
   }
   return x - 65;
