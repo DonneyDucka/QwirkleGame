@@ -19,7 +19,12 @@ public:
    int getScore();
    void setScore(int points);
    void resetTurn();
+   
    LinkedList* getHand();
+
+   void setPlayerName(std::string name);
+   void setPlayerScore(int score);
+   void setPlayerHand(Tile* tile);
 
 private:
    LinkedList* hand;
