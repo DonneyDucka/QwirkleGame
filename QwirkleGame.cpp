@@ -45,11 +45,13 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
 {
   bool check = false;
   std::string tile = placement.substr(1, 2);
-  std::string x = placement.substr(6, 1);
-  std::string y = placement.substr(7, 1);
+  std::string x = placement.substr(7, 1);
+  std::string y = placement.substr(8, 1);
   Tile *tileInHand = nullptr;
-
-  if (std::atoi(y.c_str()) < 6 && letterToNumber(*x.c_str()) < 6)
+  std::cout << x << " " <<  y << std::endl;
+  int x2n = letterToNumber(*x.c_str());
+   std::cout << x2n << " " <<  y << std::endl;
+  if (std::atoi(y.c_str()) < 6 && x2n < 6)
   {
     for (int i = 0; i < player->getHand()->returnSize(); i++)
     {
@@ -58,9 +60,8 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
       {
 
         tileInHand = player->getHand()->findNode(i)->getTile();
-
+        
         board[std::atoi(x.c_str())][std::atoi(y.c_str())] = tileInHand;
-        std::cout << x << y;
         player->getHand()->deleteNode(i);
 
         check = true;
@@ -184,15 +185,17 @@ void QwirkleGame::printBoard()
   }
 }
 // board Coordinate converting A = 0, B = 1 ... z = 25
-int QwirkleGame::letterToNumber(char a)
+int QwirkleGame::letterToNumber(char word)
 {
+  int x = word;
 
-  if (!isupper(static_cast<unsigned char>(a) == false))
+  if (!isupper(static_cast<unsigned char>(word)) == true)
   {
-    std::toupper(a);
+    std::cout << "converted" << std::endl;
+   x = std::tolower(word);
   }
-  std::cout << (int)a - 65;
-  return (int)a - 65;
+  std::cout << x;
+  return x;
 }
 
 // str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char

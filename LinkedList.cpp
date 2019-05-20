@@ -1,11 +1,10 @@
 
 #include "LinkedList.h"
 
-LinkedList::LinkedList() :
-    head(nullptr),
-    current(nullptr),
-    tail(nullptr)
- 
+LinkedList::LinkedList() : head(nullptr),
+                           current(nullptr),
+                           tail(nullptr)
+
 {
   numOfNodes = 0;
 }
@@ -14,126 +13,138 @@ LinkedList::~LinkedList()
 {
 }
 
-void LinkedList::addNode(Tile* a)
+void LinkedList::addNode(Tile *a)
 {
-     NodePtr node = new Node(a, nullptr);
-    /* checks if the list is already empty
+  NodePtr node = new Node(a, nullptr);
+  /* checks if the list is already empty
      * then go through the list, using next to
      * point to the next node
      * else, if empty, make the head the node
      */
-    if (head != nullptr)
-    {  
-       tail->setNext(node);
-       tail = node;
-       numOfNodes++;
-    }
-    else if (head == nullptr)
-    {
-      head = node;
-      tail = node;
-      numOfNodes++;
-    } else if (head == tail)
-    {
-      tail->setNext(node);
-      tail = node;
-      head->setNext(tail);
-      numOfNodes++;
-    } 
-}//end of addNode
+  if (head != nullptr)
+  {
+    tail->setNext(node);
+    tail = node;
+    numOfNodes++;
+  }
+  else if (head == nullptr)
+  {
+    head = node;
+    tail = node;
+    numOfNodes++;
+  }
+  else if (head == tail)
+  {
+    tail->setNext(node);
+    tail = node;
+    head->setNext(tail);
+    numOfNodes++;
+  }
+} //end of addNode
 /* find node for the random int to pull out */
-Node* LinkedList::findNode(int f)
+Node *LinkedList::findNode(int f)
 {
- Node* temp = head;
+  Node *temp = head;
 
-  for(int count = 1; count <= f; count++) {
+  for (int count = 1; count <= f; count++)
+  {
 
-   temp = temp->getNext();
-
+    temp = temp->getNext();
   }
   return temp;
 }
 
-void LinkedList::addAt(int i, Node* node) {
-
- if ( i > 0 && i < numOfNodes - 1) { 
-      Node* ka = findNode(i);
-        findNode(i-1)->setNext(node);
-        findNode(i-1)->getNext()->setNext(ka);
- numOfNodes++;
-
- } else if (i == 0 && head != nullptr){
-   node->setNext(head);
-   head = node;
-   numOfNodes++;
- }
-
+void LinkedList::addAt(int i, Node *node)
+{
+  if (i > 0 && i < numOfNodes - 1)
+  { std::cout << "running1";
+    Node *ka = findNode(i);
+    findNode(i - 1)->setNext(node);
+    findNode(i - 1)->getNext()->setNext(ka);
+    numOfNodes++;
+  }
+  else if (i == 0 && head != nullptr)
+  { std::cout << "running2";
+    node->setNext(head);
+    head = node;
+    numOfNodes++;
+  }
+  else if (i == (numOfNodes))
+  {
+    tail->setNext(node);
+    tail->getNext()->setNext(nullptr);
+    tail = tail->getNext();
+    numOfNodes++;
+  }
 }
 
-void LinkedList::addBack(Tile* data){
-  
-    Node* newNode = new Node(data, nullptr);
-       
-       tail->setNext(newNode);
-       tail = newNode;
-       numOfNodes++;
-
+void LinkedList::addBack(Tile *data)
+{ 
+  Node *newNode = new Node(data, nullptr);
+  tail->setNext(newNode);
+  tail = tail->getNext();
+  numOfNodes++;
 }
 /* delete selected tile pointer */
 void LinkedList::deleteNode(int i)
-{   
-    if (i == 0) {
-     head = head->getNext();
-    } else if (i == numOfNodes - 1)    
-    {
-      deleteBack();
-    }
-    else {
-    findNode(i-1)->setNext(findNode(i+1));
-    } 
-
- numOfNodes--;
+{
+  if (i == 0)
+  {
+    head = head->getNext();
+    numOfNodes--;
+  }
+  else if (i == numOfNodes - 1)
+  {
+    deleteBack();
+  }
+  else
+  {
+    findNode(i - 1)->setNext(findNode(i + 1));
+    numOfNodes--;
+  }
 }
 
-void LinkedList::deleteBack(){
+void LinkedList::deleteBack()
+{
 
-tail = findNode(numOfNodes - 2);
-tail->setNext(nullptr);
-numOfNodes--;
-
+  tail = findNode(numOfNodes - 2);
+  tail->setNext(nullptr);
+  numOfNodes--;
 }
 
-void LinkedList::deleteFront(){
-   Node* temp = head;
-   head = head->getNext();
-   free(temp);
-   numOfNodes--;
+void LinkedList::deleteFront()
+{
+  Node *temp = head;
+  head = head->getNext();
+  free(temp);
+  numOfNodes--;
 }
 
 int LinkedList::returnSize()
 {
- return numOfNodes;
+  return numOfNodes;
 }
 
 /* prints everything in the linked list */
 void LinkedList::printLine()
-{ 
-      current = head;
+{
+  current = head;
 
-      while(current->getNext() != nullptr)
-      {
-          current->getTile()->printTile();
-         
-          if(current->getNext()->getNext() != nullptr) 
-          {
-          std::cout <<", ";
-          } 
-          if (current->getNext()->getNext() == nullptr) {
-            std::cout <<", "; 
-            current->getNext()->getTile()->printTile();
-          }
-          current = current->getNext();
-      }
+  while (current->getNext() != nullptr)
+  {
+    current->getTile()->printTile();
 
-      std::cout << std::endl;
+    if (current->getNext()->getNext() != nullptr)
+    {
+      std::cout << ", ";
+    }
+    if (current->getNext()->getNext() == nullptr)
+    {
+      std::cout << ", ";
+      current->getNext()->getTile()->printTile();
+    }
+    current = current->getNext();
+  }
+
+  std::cout << std::endl;
 }

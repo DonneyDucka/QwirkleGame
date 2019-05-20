@@ -41,9 +41,7 @@ void Player::fillHand(Bag* bag) {
    hand->addNode(bag->pickFromBag()->getTile());
 
  } 
-
  }
-
  LinkedList* Player::getHand(){
  return hand;
  }
