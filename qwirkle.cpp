@@ -13,7 +13,7 @@ void newGame();
 void saveGame(std::string string);
 void loadGame();
 void studentInfo();
-void readIn(std::string inFile);
+
 std::string input;
 std::string playerOne;
 std::string playerTwo;
@@ -21,6 +21,8 @@ std::string place;
 std::string place2;
 std::string fileName;
 
+std::ofstream outfile;
+std::ifstream infile;
 
 int main(void)
 {
@@ -133,10 +135,10 @@ void newGame()
   //Shuffling the bag
   g->getBag()->shuffleBag();
   g->fillPlayerHands();
-  
+
   //GameEngine commences
 
-  /* 
+  /*
     **PSEUDOCODE**
     REPEAT until bag size is empty OR player hand is empty
     DISPLAY the current player's turn
@@ -150,7 +152,7 @@ void newGame()
         REMOVE tile from player hand
       IF REPLACE
         REMOVE tile from player hand and add it to back of the bag linked list
-        TAKE first tile from bag 
+        TAKE first tile from bag
         PLACE in player hand
 
     END OF current player's turn
@@ -195,15 +197,14 @@ void newGame()
         while (!g->placeTile(string2, player));
       }
       else if (string1 == "replace")
-      { 
+      {
         g->replaceTile(string2, player);
       }
       else if (string1 == "save")
       {
-        std::ofstream outfile;
 
-        outfile.open(string2+".txt"); 
-        
+        outfile.open(string2+".txt");
+
         //Iterating through each of the players
         for(Player *p: g->getPlayers())
         {
@@ -216,7 +217,7 @@ void newGame()
             {
               outfile << p->getHand()->findNode(i)->getTile()->getTileDets() << ", ";
             }
-            else 
+            else
             {
               outfile << p->getHand()->findNode(i)->getTile()->getTileDets();
             }
@@ -224,7 +225,7 @@ void newGame()
           //Current player details has been written out to the file
           outfile << "\n";
         }
-         
+
           outfile << g->getBoard();
 
         for( int i = 0; i < g->getBag()->getList()->returnSize(); i++)
@@ -259,20 +260,32 @@ void newGame()
 //Method displays loading the game
 void loadGame()
 {
-
-  std::string line;
-
   std::cout << "Enter the filename from which to load a game" << std::endl;
   std::cin >> fileName;
 
-  std::ifstream infile;
-
   infile.open(fileName+".txt");
 
-  if (!infile)
+  if(infile)
   {
-    std::cout << "File was not opened";
+    std::cout << "YES";
   }
+
+
+  //infile.open("../savedFiles/"+fileName+".txt", std::ifstream::in);
+  // infile.open(fileName);
+
+  //     if (!infile)
+  // {
+  //   std::cout<<"no";
+  // }
+
+  // for (std::string line; getline(infile, line);)
+  // {
+  //   std::string a = line;
+  //   std::cout << a << std::endl;
+  // }
+
+  //infile.open("savedFile/dvo.txt");
 
   // infile.open("david.txt");
 
@@ -283,10 +296,7 @@ void loadGame()
 
 
 
-  // while(getline(infile, line))
-  // {
-  //   std::cout << line;
-  // }
+
 
   // std::cout << std::endl;
   // std::cout << "Enter the filename from which to load a game" << std::endl;
@@ -304,17 +314,12 @@ void loadGame()
   // }
 
 
-  // for (std::string line; getline(infile, line);)
-  // {
-  //   std::string a = line;
-  //   std::cout << a << std::endl;
-  // }
 
-  // infile.close();
+  infile.close();
 
-  // std::cout << std::endl;
-  // std::cout << "Qwirkle game successfully loaded" << std::endl;
-  // std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "Qwirkle game successfully loaded" << std::endl;
+  std::cout << std::endl;
 }
 
 
@@ -351,12 +356,5 @@ void studentInfo()
             << "Email: s3723430@student.rmit.edu.au" << std::endl;
   std::cout << "------------------------------------" << std::endl;
   std::cout << std::endl;
-
-}
-
-void readIn(std::string name)
-{
-std::ifstream inLine(name+".txt");
-
 
 }
