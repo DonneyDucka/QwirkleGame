@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <ostream>
+#include <sstream>
 
 #include "LinkedList.h"
 #include "QwirkleGame.h"
@@ -20,6 +21,7 @@ std::string playerTwo;
 std::string place;
 std::string place2;
 std::string fileName;
+std::string line;
 
 std::ofstream outfile;
 std::ifstream infile;
@@ -260,31 +262,80 @@ void newGame()
 //Method displays loading the game
 void loadGame()
 {
+
   std::cout << "Enter the filename from which to load a game" << std::endl;
   std::cin >> fileName;
 
-  infile.open(fileName+".txt");
+  infile.open(" "+fileName+".txt");
 
   if(infile)
   {
-    std::cout << "YES";
+    std::cout << "File has been loaded" << std::endl;
+
+    std::string delimiter = ", ";
+
+    QwirkleGame *p = new QwirkleGame();
+    
+    int noOfPlayers = 0;
+    int counter = 0;
+    
+    for(std::string line; getline(infile, line);)
+    {
+
+      if(counter == 0 || counter == 3)
+      {
+        p->addPlayer(line);
+        noOfPlayers++;
+      }
+      if(counter == 1 || counter == 4)
+      {
+        int score = std::stoi(line);
+        p->getPlayers().at(noOfPlayers-1)->setScore(score);
+      }
+      if(counter == 2 || counter == 5)
+      {
+        while(getline(infile, line))
+        {
+          std::stringstream stream(line);
+          getline(stream, new Tile(Color, Shape), ", ");
+        }
+      }
+
+
+
+
+      if(typeid(line).name() == typeid(std::string).name())
+      {
+        p->addPlayer(line);
+      }
+      else if(counter == 1 || counter == 3)
+      {
+        p->getPlayers().at(noOfPlayers)->setPlayerScore(line);
+      }
+
+
+      std::cout<<line<<std::endl;
+      std::cout<<counter<<std::endl;
+    counter++;
+    }
+
+    infile.close();
+
+    std::cout << std::endl;
+    std::cout << "Qwirkle game successfully loaded" << std::endl;
+    std::cout << std::endl;
   }
+  else
+  {
+    std::cout << "File could not be loaded." << std::endl;
+  }
+  
 
 
   //infile.open("../savedFiles/"+fileName+".txt", std::ifstream::in);
   // infile.open(fileName);
 
-  //     if (!infile)
-  // {
-  //   std::cout<<"no";
-  // }
-
-  // for (std::string line; getline(infile, line);)
-  // {
-  //   std::string a = line;
-  //   std::cout << a << std::endl;
-  // }
-
+  
   //infile.open("savedFile/dvo.txt");
 
   // infile.open("david.txt");
@@ -293,10 +344,6 @@ void loadGame()
   // {
   //   std::cout << "test";
   // }
-
-
-
-
 
   // std::cout << std::endl;
   // std::cout << "Enter the filename from which to load a game" << std::endl;
@@ -312,14 +359,6 @@ void loadGame()
   // {
   //   std::cout << "Failed to open file.";
   // }
-
-
-
-  infile.close();
-
-  std::cout << std::endl;
-  std::cout << "Qwirkle game successfully loaded" << std::endl;
-  std::cout << std::endl;
 }
 
 
