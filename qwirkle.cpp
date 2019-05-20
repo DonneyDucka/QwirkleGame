@@ -245,7 +245,6 @@ void newGame()
        }
 
         player->printHand();
-
       //Reprinting the board
       g->printBoard();
     }

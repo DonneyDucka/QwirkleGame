@@ -18,7 +18,7 @@ public:
   ~QwirkleGame();
 
   bool placeTile(std::string placement, Player* player);
-  void allocatePoints();
+  void allocatePoints(int x, int y, Player* player);
   bool replaceTile(std::string replacement, Player* player);
   void addPlayer(std::string name);
   void fillPlayerHands();

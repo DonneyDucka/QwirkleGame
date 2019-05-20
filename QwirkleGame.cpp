@@ -48,10 +48,8 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
   Tile *tileInHand = nullptr;
-  std::cout << x << " " << y << std::endl;
   int x2n = letterToNumber(*x.c_str());
   int y2n = std::atoi(y.c_str());
-  std::cout << x2n << " " << y << std::endl;
   if (y2n < 6 && x2n < 6)
   {
     for (int i = 0; i < player->getHand()->returnSize(); i++)
@@ -65,7 +63,7 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
         {
           board[x2n][std::atoi(y.c_str())] = tileInHand;
           player->getHand()->deleteNode(i);
-
+          allocatePoints(x2n, y2n, player);
           check = true;
         }
         else
@@ -85,10 +83,64 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   return check;
 }
 
-void QwirkleGame::allocatePoints()
+void QwirkleGame::allocatePoints(int x, int y, Player *player)
 {
-  //TO BE IMPLEMENTED, NEED TO GET POINTS FOR COMBO,
-  // SUCH AS THE HORIZONTAL RUN AND VERTICAL RUN
+  int trackVer = 0;
+  int trackHor = 0;
+  for (int i = 0; i < y; i++)
+  {
+    if (board[x][i] != nullptr && i < y)
+    {
+      trackHor++;
+    }
+    else if (board[x][i] == nullptr)
+    {
+      trackHor = 0;
+    }
+  }
+  for (int i = 6; i > y; i--)
+  {
+
+    if (board[x][i] != nullptr && i > y)
+    {
+      trackHor++;
+    }
+    else if (board[x][i] == nullptr && trackHor < 1)
+    {
+      trackHor = 0;
+    }
+  }
+  for (int i = 0; i < x; i++)
+  {
+
+    if (board[i][y] != nullptr && i < x)
+    {
+      trackVer++;
+    }
+    else if (board[x][i] == nullptr)
+    {
+      trackVer = 0;
+    }
+  }
+  for (int i = 6; i > x; i--)
+  {
+
+    if (board[i][y] != nullptr && i > y)
+    {
+      trackVer++;
+    }
+    else if (board[i][y] == nullptr && trackVer < 1)
+    {
+      trackVer = 0;
+    }
+  }
+  if (trackHor == 6 || trackVer == 6)
+  {
+    std::cout << "QWIRKLE" << std::endl;
+  }
+  int totalpoints = trackHor + trackVer;
+
+  player->setScore(totalpoints);
 }
 
 bool QwirkleGame::replaceTile(std::string replacement, Player *player)
@@ -108,7 +160,6 @@ bool QwirkleGame::replaceTile(std::string replacement, Player *player)
     {
       if (player->getHand()->findNode(k)->getTile()->getTileDets() == tile)
       {
-
         std::cout << "deleting the tile " << std::endl;
         tileInHand = player->getHand()->findNode(k)->getTile();
         bag->getList()->addBack(tileInHand);
@@ -202,7 +253,6 @@ int QwirkleGame::letterToNumber(char word)
     std::cout << "converted" << std::endl;
     x = std::tolower(word);
   }
-  std::cout << x;
   return x - 65;
 }
 
@@ -227,8 +277,10 @@ bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
 
     while (counter < 4)
     {
+
       if (surrounding[counter] != nullptr)
       {
+
         if (surrounding[counter]->getColour() != tile->getColour() && surrounding[counter]->getShape() != tile->getShape())
         {
           check = false;
@@ -241,4 +293,4 @@ bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
   return check;
 }
 
-// str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char
+
