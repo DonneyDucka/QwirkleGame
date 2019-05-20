@@ -48,10 +48,11 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
   Tile *tileInHand = nullptr;
-  std::cout << x << " " <<  y << std::endl;
+  std::cout << x << " " << y << std::endl;
   int x2n = letterToNumber(*x.c_str());
-   std::cout << x2n << " " <<  y << std::endl;
-  if (std::atoi(y.c_str()) < 6 && x2n < 6)
+  int y2n = std::atoi(y.c_str());
+  std::cout << x2n << " " << y << std::endl;
+  if (y2n < 6 && x2n < 6)
   {
     for (int i = 0; i < player->getHand()->returnSize(); i++)
     {
@@ -60,11 +61,15 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
       {
 
         tileInHand = player->getHand()->findNode(i)->getTile();
-        board[x2n][std::atoi(y.c_str())] = tileInHand;
-        player->getHand()->deleteNode(i);
+        if ((checkPlacement(x2n, y2n, tileInHand)) == true)
+        {
+          board[x2n][std::atoi(y.c_str())] = tileInHand;
+          player->getHand()->deleteNode(i);
 
-        check = true;
-        break;
+          check = true;
+        }
+        else
+          std::cout << "Not a legal placement" << std::endl;
       }
     }
   }
@@ -103,13 +108,13 @@ bool QwirkleGame::replaceTile(std::string replacement, Player *player)
     {
       if (player->getHand()->findNode(k)->getTile()->getTileDets() == tile)
       {
-        
+
         std::cout << "deleting the tile " << std::endl;
         tileInHand = player->getHand()->findNode(k)->getTile();
         bag->getList()->addBack(tileInHand);
         player->getHand()->deleteNode(k);
         Node *pickedTile = bag->pickFromBag();
-        player->getHand()->addAt(k,pickedTile);
+        player->getHand()->addAt(k, pickedTile);
         check = true;
       }
     }
@@ -180,7 +185,7 @@ void QwirkleGame::printBoard()
       if (j == 5)
       {
         std::cout << "|";
-        boardToString+= "|";
+        boardToString += "|";
       }
     }
     std::cout << std::endl;
@@ -195,7 +200,7 @@ int QwirkleGame::letterToNumber(char word)
   if (!isupper(static_cast<unsigned char>(word)) == true)
   {
     std::cout << "converted" << std::endl;
-   x = std::tolower(word);
+    x = std::tolower(word);
   }
   std::cout << x;
   return x - 65;
@@ -204,6 +209,36 @@ int QwirkleGame::letterToNumber(char word)
 std::string QwirkleGame::getBoard()
 {
   return boardToString;
+}
+
+bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
+{
+  bool check = true;
+  int counter = 0;
+  if (board[x][y] == nullptr)
+  {
+    return check;
+  }
+  else
+  {
+    // left            right            bottom           top
+    Tile *surrounding[4] =
+        {board[x][y - 1], board[x][y + 1], board[x + 1][y], board[x - 1][y]};
+
+    while (counter < 4)
+    {
+      if (surrounding[counter] != nullptr)
+      {
+        if (surrounding[counter]->getColour() != tile->getColour() && surrounding[counter]->getShape() != tile->getShape())
+        {
+          check = false;
+          return check;
+        }
+      }
+      counter++;
+    }
+  }
+  return check;
 }
 
 // str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char

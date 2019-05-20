@@ -23,6 +23,7 @@ public:
   void addPlayer(std::string name);
   void fillPlayerHands();
   void printBoard();
+  bool checkPlacement(int x, int y, Tile* pos);
   std::string getBoard();
   std::vector<Player *> getPlayers();
 

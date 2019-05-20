@@ -31,7 +31,7 @@ int Player::getScore()
 
 void Player::setScore(int points)
 {
-  score += points;
+  score = points;
 }
 
 void Player::fillHand(Bag* bag) {
