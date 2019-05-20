@@ -13,12 +13,14 @@ void newGame();
 void saveGame(std::string string);
 void loadGame();
 void studentInfo();
+void readIn(std::string inFile);
 std::string input;
 std::string playerOne;
 std::string playerTwo;
 std::string place;
 std::string place2;
 std::string fileName;
+
 
 int main(void)
 {
@@ -199,7 +201,8 @@ void newGame()
       else if (string1 == "save")
       {
         std::ofstream outfile;
-        outfile.open(string2); 
+
+        outfile.open(string2+".txt"); 
         
         //Iterating through each of the players
         for(Player *p: g->getPlayers())
@@ -257,14 +260,55 @@ void newGame()
 //Method displays loading the game
 void loadGame()
 {
-  std::cout << std::endl;
+
+  std::string line;
+
   std::cout << "Enter the filename from which to load a game" << std::endl;
   std::cin >> fileName;
 
-  std::cout << std::endl;
-  std::cout << "Qwirkle game successfully loaded" << std::endl;
-  std::cout << fileName << std::endl;
-  std::cout << std::endl;
+  readIn(fileName);
+
+  // infile.open("david.txt");
+
+  // if (infile.good())
+  // {
+  //   std::cout << "test";
+  // }
+
+
+
+  // while(getline(infile, line))
+  // {
+  //   std::cout << line;
+  // }
+
+  // std::cout << std::endl;
+  // std::cout << "Enter the filename from which to load a game" << std::endl;
+  // std::cin >> fileName;
+
+  // std::ifstream infile(fileName+".txt");
+
+  // infile.close();
+
+  // infile.open(fileName + ".txt");
+
+  // if(infile.fail())
+  // {
+  //   std::cout << "Failed to open file.";
+  // }
+
+
+  // for (std::string line; getline(infile, line);)
+  // {
+  //   std::string a = line;
+  //   std::cout << a << std::endl;
+  // }
+
+  // infile.close();
+
+  // std::cout << std::endl;
+  // std::cout << "Qwirkle game successfully loaded" << std::endl;
+  // std::cout << std::endl;
 }
 
 
@@ -301,4 +345,12 @@ void studentInfo()
             << "Email: s3723430@student.rmit.edu.au" << std::endl;
   std::cout << "------------------------------------" << std::endl;
   std::cout << std::endl;
+
+}
+
+void readIn(std::string name)
+{
+std::ifstream inLine(name+".txt");
+
+
 }
