@@ -23,6 +23,7 @@ public:
   void addPlayer(std::string name);
   void fillPlayerHands();
   void printBoard();
+  std::string getBoard();
   std::vector<Player *> getPlayers();
 
   Bag *getBag();
@@ -30,6 +31,7 @@ public:
 private:
   int letterToNumber(char a);
   Tile *board[6][6];
+  std::string boardToString;
   std::vector<Player *> players;
   Bag *bag;
 };

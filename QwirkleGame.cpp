@@ -140,10 +140,8 @@ std::vector<Player *> QwirkleGame::getPlayers()
 
 void QwirkleGame::fillPlayerHands()
 {
-
   for (int i = 0; i < players.size(); i++)
   {
-
     players.at(i)->fillHand(bag);
   }
 }
@@ -151,6 +149,9 @@ void QwirkleGame::printBoard()
 {
   std::cout << "  0  1  2  3  4  5  " << std::endl;
   std::cout << " ------------------- " << std::endl;
+
+  boardToString = "  0  1  2  3  4  5  \n ------------------- \n";
+
   char a = 'A';
   for (int i = 0; i < 6; i++)
   {
@@ -160,25 +161,30 @@ void QwirkleGame::printBoard()
       if (j == 0)
       {
         std::cout << a;
+        boardToString += a;
         a++;
       }
       std::cout << "|";
+      boardToString += "|";
 
       if (board[i][j] == nullptr)
       {
         std::cout << "  ";
+        boardToString += "  ";
       }
       else
       {
         std::cout << board[i][j]->getTileDets();
+        boardToString += board[i][j]->getTileDets();
       }
       if (j == 5)
       {
-
         std::cout << "|";
+        boardToString+= "|";
       }
     }
     std::cout << std::endl;
+    boardToString += "\n";
   }
 }
 // board Coordinate converting A = 0, B = 1 ... z = 25
@@ -193,6 +199,11 @@ int QwirkleGame::letterToNumber(char word)
   }
   std::cout << x;
   return x - 65;
+}
+
+std::string QwirkleGame::getBoard()
+{
+  return boardToString;
 }
 
 // str = const_cast<char*>((str2.substr(2,4)).c_str());  <- casting string to char

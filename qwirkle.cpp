@@ -1,13 +1,16 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <ostream>
+
 #include "LinkedList.h"
 #include "QwirkleGame.h"
 
 #define EXIT_SUCCESS 0
 //test
 void newGame();
-void saveGame();
+void saveGame(std::string string);
 void loadGame();
 void studentInfo();
 std::string input;
@@ -157,14 +160,16 @@ void newGame()
     {
 
       //Displaying the current player's turn
-      std::cout << player->getName() << ", it's your turn" << '\n'
-                << std::endl;
+      std::cout << player->getName() << ", it's your turn" << '\n' << std::endl;
 
       //Displaying the scoreboard
       for (Player *playerlist : g->getPlayers())
       {
         std::cout << playerlist->getName() << "'s score: " << playerlist->getScore() << std::endl;
       }
+
+      //Newline for neatness
+      std::cout << std::endl;
 
       //Printing the board for viewing
       g->printBoard();
@@ -191,10 +196,54 @@ void newGame()
       { 
         g->replaceTile(string2, player);
       }
-      else if (string1.compare("SAVE"))
+      else if (string1 == "save")
       {
-        saveGame();
-      }
+        std::ofstream outfile;
+        outfile.open(string2); 
+        
+        //Iterating through each of the players
+        for(Player *p: g->getPlayers())
+        {
+          outfile << p->getName() << "\n";
+          outfile << p->getScore() << "\n";
+          
+          for(int i = 0; i < p->getHand()->returnSize(); i++)
+          {
+            if(i != p->getHand()->returnSize() - 1)
+            {
+              outfile << p->getHand()->findNode(i)->getTile()->getTileDets() << ", ";
+            }
+            else 
+            {
+              outfile << p->getHand()->findNode(i)->getTile()->getTileDets();
+            }
+          }
+          //Current player details has been written out to the file
+          outfile << "\n";
+        }
+         
+          outfile << g->getBoard();
+
+        for( int i = 0; i < g->getBag()->getList()->returnSize(); i++)
+        {
+          if( i!= g->getBag()->getList()->returnSize() - 1)
+          {
+            outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets() << ", ";
+          }
+          else
+          {
+            outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets();
+          }
+        }
+
+        outfile.close();
+
+        std::cout << "\n";
+        std::cout << "Game successfully saved \n";
+        std::cout << "\n";
+
+       }
+
         player->printHand();
 
       //Reprinting the board
@@ -218,9 +267,6 @@ void loadGame()
   std::cout << std::endl;
 }
 
-void saveGame()
-{
-}
 
 //Method displays student info
 void studentInfo()
