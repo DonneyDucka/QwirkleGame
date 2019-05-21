@@ -129,10 +129,8 @@ void newGame()
 
   //Initializing the QwirkleGame, in here the bag is created and board is generated
   QwirkleGame *g = new QwirkleGame();
-
   //Filling the bag
   g->getBag()->fillBag();
-
   //Adding players -> However, we need to alter this as the amount of players is dynamic for milestone 3
   g->addPlayer(playerOne);
   g->addPlayer(playerTwo);
@@ -169,7 +167,8 @@ void newGame()
     {
 
       //Displaying the current player's turn
-      std::cout << player->getName() << ", it's your turn" << '\n' << std::endl;
+      std::cout << player->getName() << ", it's your turn" << '\n'
+                << std::endl;
 
       //Displaying the scoreboard
       for (Player *playerlist : g->getPlayers())
@@ -184,38 +183,45 @@ void newGame()
       g->printBoard();
       std::cout << std::endl;
 
-
-
       //Printing the current players hand
       std::cout << "Your hand is.." << std::endl;
       player->printHand();
       bool moveMade = false;
 
-      while (moveMade == false) {
+      while (moveMade == false)
+      {
 
-      //Reading in player input
-      std::string string1, string2;
-      std::getline(std::cin >> string1, string2);
-      
-      for (int i = 0; i < string1.length(); i++)
-      {
-        std::tolower(string1[i]);
-      }
+        //Reading in player input
+        std::string string1, string2;
+        std::getline(std::cin >> string1, string2);
 
-      //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
-      if (string1 == "place")
-      {
-       moveMade = g->placeTile(string2, player);
-      }
-      else if (string1 == "replace")
-      {
-       moveMade = g->replaceTile(string2, player);
-      }
-      else if (string1 == "save")
-      {
-        saveGame(g, string2);
-        moveMade = true;
-      }
+        for (int i = 0; i < string1.length(); i++)
+        {
+          std::tolower(string1[i]);
+        }
+
+        //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
+        if (string1 == "place")
+        {
+          moveMade = g->placeTile(string2, player);
+          if (!moveMade)
+          {
+            std::cout << "Invalid move. Please enter a valid move" << std::endl;
+          }
+        }
+        else if (string1 == "replace")
+        {
+          moveMade = g->replaceTile(string2, player);
+          if (!moveMade)
+          {
+            std::cout << "Invalid move. Please enter a valid move" << std::endl;
+          }
+        }
+        else if (string1 == "save")
+        {
+          saveGame(g, string2);
+          moveMade = true;
+        }
       }
 
       player->printHand();
@@ -274,82 +280,56 @@ void saveGame(QwirkleGame *g, std::string string2)
 //Method displays loading the game
 void loadGame()
 {
+
   std::cout << "Enter the filename from which to load a game" << std::endl;
   std::cin >> fileName;
 
-  infile.open(" "+fileName+".txt");
+  infile.open(" " + fileName + ".txt");
 
-  if(infile)
+  if (infile)
   {
     std::cout << "File has been loaded" << std::endl;
+
+    std::string delimiter = ", ";
 
     QwirkleGame *p = new QwirkleGame();
 
     int noOfPlayers = 0;
     int counter = 0;
-    
-    for(std::string line; getline(infile, line);)
+
+    for (std::string line; getline(infile, line);)
     {
-      if(counter == 0 || counter == 3)
+
+      if (counter == 0 || counter == 3)
       {
         p->addPlayer(line);
         noOfPlayers++;
       }
-      if(counter == 1 || counter == 4)
+      if (counter == 1 || counter == 4)
       {
         int score = std::stoi(line);
-        p->getPlayers().at(noOfPlayers-1)->setScore(score);
+        p->getPlayers().at(noOfPlayers - 1)->setScore(score);
       }
-      if(counter == 2 || counter == 5 || counter == 14)
+      if (counter == 14)
       {
-          std::stringstream stream(line);
-          std::string tile;
-          
-          if(counter == 2 || counter == 5)
-          {
-            while(stream >> tile)
-            {
-              Tile* t = new Tile(tile.at(0), (int)tile.at(1)-48);
-              p->getPlayers().at(noOfPlayers-1)->getHand()->addNode(t);
-            }
-          }
-          if(counter == 14)
-          {
-            while(stream >> tile)
-            {
-              //I take away 48 because of ascii conversions
-              Tile* t = new Tile(tile.at(0), (int)tile.at(1)-48);            
-              p->getBag()->getList()->addNode(t);
-            }
-          }
-      }
-      if( counter >= 8 && counter <= 13)
-      {
-
         std::stringstream stream(line);
-        std::string tileOnBoard;
+        std::string tile;
+        //char cstr;
+        //Tile* t;
 
-        // int count = 0;
-        // int x = 0;
-        // int y = 0;
-
-        while(stream >> tileOnBoard)
+        if (counter == 14)
         {
-          std::cout << tileOnBoard << std::endl;
-
-        
+          while (stream >> tile)
+          {
+            std::cout << tile.at(0) << std::endl;
+            std::cout << tile.c_str() << std::endl;
+          }
         }
       }
+
+      std::cout << line << std::endl;
       counter++;
     }
-
-    for(Player *z : p->getPlayers())
-    {
-      z->getHand() ->printLine();
-    }
-
-    std::cout << "printing bag" << std::endl;
-    p->getBag()->getList()->printLine();
 
     infile.close();
 
@@ -361,6 +341,33 @@ void loadGame()
   {
     std::cout << "File could not be loaded." << std::endl;
   }
+
+  //infile.open("../savedFiles/"+fileName+".txt", std::ifstream::in);
+  // infile.open(fileName);
+
+  //infile.open("savedFile/dvo.txt");
+
+  // infile.open("david.txt");
+
+  // if (infile.good())
+  // {
+  //   std::cout << "test";
+  // }
+
+  // std::cout << std::endl;
+  // std::cout << "Enter the filename from which to load a game" << std::endl;
+  // std::cin >> fileName;
+
+  // std::ifstream infile(fileName+".txt");
+
+  // infile.close();
+
+  // infile.open(fileName + ".txt");
+
+  // if(infile.fail())
+  // {
+  //   std::cout << "Failed to open file.";
+  // }
 }
 
 //Method displays student info
@@ -397,4 +404,3 @@ void studentInfo()
   std::cout << "------------------------------------" << std::endl;
   std::cout << std::endl;
 }
-
