@@ -47,12 +47,20 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   std::string tile = placement.substr(1, 2);
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
-  Tile *tileInHand = nullptr;
+  std::string code = "ROYGB";
+  bool p = (code.find(x) != std::string::npos);
+   Tile *tileInHand = nullptr;
   int x2n = letterToNumber(*x.c_str());
   int y2n = std::atoi(y.c_str());
-  if (y2n < 6 && x2n < 6)
+  int i = 0;
+  
+  if (p == false ) {
+    std::cout << "incorrect tile entered";
+    return false;
+  }
+  else if (y2n < 6 && x2n < 6)
   {
-    for (int i = 0; i < player->getHand()->returnSize(); i++)
+    while (tileInHand == nullptr && i < 6)
     {
 
       if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile)
@@ -66,14 +74,17 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
           allocatePoints(x2n, y2n, player);
           player->getHand()->addAt(i,bag->getList()->findNode(0));
           bag->getList()->deleteFront();
-          check = true;
+          return true;
         }
         else
           std::cout << "Not a legal placement" << std::endl;
+          return false;
       }
+     i++;
     }
   }
-  else if (tileInHand == nullptr)
+ 
+  if (tileInHand == nullptr)
   {
     std::cout << "The tile you have entered does not exist" << std::endl;
   }
