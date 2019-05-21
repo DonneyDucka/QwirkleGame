@@ -289,8 +289,6 @@ void loadGame()
   {
     std::cout << "File has been loaded" << std::endl;
 
-    std::string delimiter = ", ";
-
     QwirkleGame *p = new QwirkleGame();
 
     int noOfPlayers = 0;
@@ -298,7 +296,6 @@ void loadGame()
 
     for (std::string line; getline(infile, line);)
     {
-
       if (counter == 0 || counter == 3)
       {
         p->addPlayer(line);
@@ -309,25 +306,59 @@ void loadGame()
         int score = std::stoi(line);
         p->getPlayers().at(noOfPlayers - 1)->setScore(score);
       }
-      if (counter == 14)
+      //These lines occupy tile contents, whether it is the player's hands or the tiles in the bag
+      if ( counter == 2 || counter == 5 || counter == 34 )
       {
         std::stringstream stream(line);
         std::string tile;
-        //char cstr;
-        //Tile* t;
 
-        if (counter == 14)
+        //These lines occupy players' hands
+        if (counter == 2 || counter == 5)
         {
           while (stream >> tile)
           {
-            std::cout << tile.at(0) << std::endl;
-            std::cout << tile.c_str() << std::endl;
+            Tile *t = new Tile(tile.at(0), (int)tile.at(1) - 48);
+            p->getPlayers().at(noOfPlayers - 1)->getHand()->addNode(t);
+          }
+        }
+
+        //the 33rd line occupy the tiles in the bag
+        if (counter == 34)
+        {
+          while (stream >> tile)
+          {
+            //I take away 48 because of ascii conversions
+            Tile *t = new Tile(tile.at(0), (int)tile.at(1) - 48);
+            p->getBag()->getList()->addNode(t);
           }
         }
       }
 
+      //These lines work with the tiles that are on the board
+      if( counter >= 8 && counter <= 33)
+      {
+
+        int x_count = 0;
+        int y_count = 0;
+        std::stringstream stream(line);
+        std::string tileOnBoard;
+
+        while(stream >> tileOnBoard)
+        {
+          std::cout << tileOnBoard << std::endl;
+        }
+
+
+      }
+
+
+      else
+      {
+        counter++;
+      }
+    
       std::cout << line << std::endl;
-      counter++;
+   
     }
 
     infile.close();
@@ -340,33 +371,6 @@ void loadGame()
   {
     std::cout << "File could not be loaded." << std::endl;
   }
-
-  //infile.open("../savedFiles/"+fileName+".txt", std::ifstream::in);
-  // infile.open(fileName);
-
-  //infile.open("savedFile/dvo.txt");
-
-  // infile.open("david.txt");
-
-  // if (infile.good())
-  // {
-  //   std::cout << "test";
-  // }
-
-  // std::cout << std::endl;
-  // std::cout << "Enter the filename from which to load a game" << std::endl;
-  // std::cin >> fileName;
-
-  // std::ifstream infile(fileName+".txt");
-
-  // infile.close();
-
-  // infile.open(fileName + ".txt");
-
-  // if(infile.fail())
-  // {
-  //   std::cout << "Failed to open file.";
-  // }
 }
 
 //Method displays student info

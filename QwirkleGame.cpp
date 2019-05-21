@@ -47,6 +47,10 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   std::string tile = placement.substr(1, 2);
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
+  if (placement.length() > 8) {
+    y = placement.substr(8, 2);
+
+  }
   std::string code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   bool p = (code.find(x) != std::string::npos);
    Tile *tileInHand = nullptr;
@@ -73,6 +77,7 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
          player->getHand()->deleteNode(i);
          Node *pickedTile = bag->pickFromBag();
          player->getHand()->addAt(i, pickedTile);
+         allocatePoints(x2n,y2n,player);
           return true;
         }
         else
@@ -99,9 +104,10 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
 {
   int trackVer = 0;
   int trackHor = 0;
+  
   for (int i = 0; i < y; i++)
   {
-    if (board[x][i] != nullptr && i < y)
+    if (board[x][i] != nullptr && i <= y)
     {
       trackHor++;
     }
@@ -110,10 +116,10 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
       trackHor = 0;
     }
   }
-  for (int i = 6; i > y; i--)
+  for (int i = 26; i > y; i--)
   {
 
-    if (board[x][i] != nullptr && i > y)
+    if (board[x][i] != nullptr && i >= y)
     {
       trackHor++;
     }
@@ -125,7 +131,7 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   for (int i = 0; i < x; i++)
   {
 
-    if (board[i][y] != nullptr && i < x)
+    if (board[i][y] != nullptr && i <= x)
     {
       trackVer++;
     }
@@ -134,10 +140,10 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
       trackVer = 0;
     }
   }
-  for (int i = 6; i > x; i--)
+  for (int i = 26; i > x; i--)
   {
 
-    if (board[i][y] != nullptr && i > y)
+    if (board[i][y] != nullptr && i >= y)
     {
       trackVer++;
     }
@@ -274,12 +280,7 @@ bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
 {
   bool check = true;
   int counter = 0;
-  if (board[x][y] == nullptr)
-  {
-    return check;
-  }
-  else
-  {
+
     // left            right            bottom           top
     Tile *surrounding[4] =
         {board[x][y - 1], board[x][y + 1], board[x + 1][y], board[x - 1][y]};
@@ -298,7 +299,6 @@ bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
       }
       counter++;
     }
-  }
   return check;
 }
 
