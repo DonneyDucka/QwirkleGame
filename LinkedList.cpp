@@ -56,7 +56,7 @@ Node *LinkedList::findNode(int f)
 
 void LinkedList::addAt(int i, Node *node)
 {
-  if (i > 0 && i < numOfNodes - 1)
+  if (i > 0 && i < numOfNodes)
   { 
     Node *ka = findNode(i);
     findNode(i - 1)->setNext(node);
@@ -116,7 +116,7 @@ void LinkedList::deleteFront()
 {
   Node *temp = head;
   head = head->getNext();
-  free(temp);
+  temp->setNext(nullptr);
   numOfNodes--;
 }
 

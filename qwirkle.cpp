@@ -181,13 +181,19 @@ void newGame()
       g->printBoard();
       std::cout << std::endl;
 
+
+
       //Printing the current players hand
       std::cout << "Your hand is.." << std::endl;
       player->printHand();
+      bool moveMade = false;
+
+      while (moveMade == false) {
 
       //Reading in player input
       std::string string1, string2;
       std::getline(std::cin >> string1, string2);
+      
       for (int i = 0; i < string1.length(); i++)
       {
         std::tolower(string1[i]);
@@ -196,20 +202,20 @@ void newGame()
       //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
       if (string1 == "place")
       {
-        while (!g->placeTile(string2, player));
+       moveMade = g->placeTile(string2, player);
       }
       else if (string1 == "replace")
       {
-        g->replaceTile(string2, player);
+       moveMade = g->replaceTile(string2, player);
       }
       else if (string1 == "save")
       {
         saveGame(g, string2);
+        moveMade = true;
+      }
       }
 
-       //Debugging
       player->printHand();
-
       //Reprinting the board
       g->printBoard();
     }
