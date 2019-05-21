@@ -24,7 +24,7 @@
 QwirkleGame::QwirkleGame()
 {
   this->bag = new Bag();
-  bag->fillBag();
+  //bag->fillBag();
 
   for (int i = 0; i < 6; i++)
   {
@@ -303,5 +303,4 @@ bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
   }
   return check;
 }
-
 
