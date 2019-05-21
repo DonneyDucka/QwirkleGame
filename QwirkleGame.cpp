@@ -67,8 +67,8 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
       {
         if ((checkPlacement(x2n, y2n, tileInHand)) == true)
         {
-          board[x2n][std::atoi(y.c_str())] = tileInHand;
          tileInHand = player->getHand()->findNode(i)->getTile();
+         board[x2n][std::atoi(y.c_str())] = tileInHand;
          bag->getList()->addBack(tileInHand);
          player->getHand()->deleteNode(i);
          Node *pickedTile = bag->pickFromBag();
