@@ -26,10 +26,10 @@ QwirkleGame::QwirkleGame()
   this->bag = new Bag();
   //bag->fillBag();
 
-  for (int i = 0; i < 6; i++)
+  for (int i = 0; i < 26; i++)
   {
 
-    for (int j = 0; j < 6; j++)
+    for (int j = 0; j < 26; j++)
     {
 
       board[i][j] = nullptr;
@@ -47,7 +47,7 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   std::string tile = placement.substr(1, 2);
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
-  std::string code = "ROYGB";
+  std::string code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   bool p = (code.find(x) != std::string::npos);
    Tile *tileInHand = nullptr;
   int x2n = letterToNumber(*x.c_str());
@@ -58,22 +58,21 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
     std::cout << "incorrect tile entered";
     return false;
   }
-  else if (y2n < 6 && x2n < 6)
+  else if (y2n < 26 && x2n < 26)
   {
     while (tileInHand == nullptr && i < 6)
     {
 
       if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile)
       {
-
-        tileInHand = player->getHand()->findNode(i)->getTile();
         if ((checkPlacement(x2n, y2n, tileInHand)) == true)
         {
           board[x2n][std::atoi(y.c_str())] = tileInHand;
-          player->getHand()->deleteNode(i);
-          allocatePoints(x2n, y2n, player);
-          player->getHand()->addAt(i,bag->getList()->findNode(0));
-          bag->getList()->deleteFront();
+         tileInHand = player->getHand()->findNode(i)->getTile();
+         bag->getList()->addBack(tileInHand);
+         player->getHand()->deleteNode(i);
+         Node *pickedTile = bag->pickFromBag();
+         player->getHand()->addAt(i, pickedTile);
           return true;
         }
         else
@@ -88,7 +87,7 @@ bool QwirkleGame::placeTile(std::string placement, Player *player)
   {
     std::cout << "The tile you have entered does not exist" << std::endl;
   }
-  else if (std::atoi(y.c_str()) > 6 && letterToNumber(*x.c_str()) > 6)
+  else if (std::atoi(y.c_str()) > 26 && letterToNumber(*x.c_str()) > 26)
   {
     std::cout << "The tile you have entered is beyond the boundaries of the board" << std::endl;
   }
