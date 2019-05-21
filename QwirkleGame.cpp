@@ -49,23 +49,24 @@ bool QwirkleGame::placeTile(std::string placement)
   std::string y = placement.substr(8, 1);
   std::string y2;
   int twoDigit;
-  
-  
+
   std::string code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   bool p = (code.find(x) != std::string::npos);
-   Tile *tileInHand = nullptr;
+  Tile *tileInHand = nullptr;
   int y2n = letterToNumber(*x.c_str());
   int x2n = std::atoi(y.c_str());
   int i = 0;
 
-  if (placement.length() > 9) {
-    y2 = placement.substr(9,1);
-    twoDigit = (10*x2n) + (std::atoi(y2.c_str()));
+  if (placement.length() > 9)
+  {
+    y2 = placement.substr(9, 1);
+    twoDigit = (10 * x2n) + (std::atoi(y2.c_str()));
     std::cout << twoDigit;
     x2n = twoDigit;
   }
-  
-  if (p == false ) {
+
+  if (p == false)
+  {
     std::cout << "incorrect tile entered";
     return false;
   }
@@ -76,25 +77,25 @@ bool QwirkleGame::placeTile(std::string placement)
 
       if (currentP->getHand()->findNode(i)->getTile()->getTileDets() == tile)
       {
+        tileInHand = currentP->getHand()->findNode(i)->getTile();
         if ((checkPlacement(y2n, x2n, tileInHand)) == true)
         {
-         tileInHand = currentP->getHand()->findNode(i)->getTile();
-         board[y2n][x2n] = tileInHand;
-         bag->getList()->addBack(tileInHand);
-         currentP->getHand()->deleteNode(i);
-         Node *pickedTile = bag->pickFromBag();
-         currentP->getHand()->addAt(i, pickedTile);
-         allocatePoints(y2n,x2n,currentP);
+          board[y2n][x2n] = tileInHand;
+          bag->getList()->addBack(tileInHand);
+          currentP->getHand()->deleteNode(i);
+          Node *pickedTile = bag->pickFromBag();
+          currentP->getHand()->addAt(i, pickedTile);
+          allocatePoints(y2n, x2n, currentP);
           return true;
         }
         else
           std::cout << "Not a legal placement" << std::endl;
-          return false;
+        return false;
       }
-     i++;
+      i++;
     }
   }
- 
+
   if (tileInHand == nullptr)
   {
     std::cout << "The tile you have entered does not exist" << std::endl;
@@ -111,7 +112,7 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
 {
   int trackVer = 0;
   int trackHor = 0;
-  
+
   for (int i = 0; i < y; i++)
   {
     if (board[x][i] != nullptr && i <= y)
@@ -190,7 +191,7 @@ bool QwirkleGame::replaceTile(std::string replacement)
         currentP->getHand()->deleteNode(k);
         Node *pickedTile = bag->pickFromBag();
         currentP->getHand()->addAt(k, pickedTile);
-        check = true;
+        return true;
       }
     }
   }
@@ -283,40 +284,80 @@ std::string QwirkleGame::getBoard()
   return boardToString;
 }
 
-bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
+bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
 {
-  bool check = true; 
-  int counter = 0;
+  bool check = true;
+  // bool shapeOrCol = false;
+  // int counter = 0;
+  int trackR = 0;
+  int trackL = 0;
+  int trackU = 0;
+  int trackD = 0;
+  // Tile *holder = nullptr;
 
-    // left            right            bottom           top
-    Tile *surrounding[4] =
-        {board[x][y - 1], board[x][y + 1], board[x + 1][y], board[x - 1][y]};
+  // left            right            bottom           top
+  // Tile *surrounding[8] =
+  //     {board[y][x- 1], board[y][x-2] ,board[y][x + 1],board[y][x+2], board[y + 1][x],board[y+2][x], board[y - 1][x],board[y-2][x]};
 
-    while (counter < 4)
+  
+
+    for (int j = 1; j < 8; j++)
     {
 
-      if (surrounding[counter] != nullptr)
+      if (board[y][x - j] == nullptr && trackL == 0)
       {
-        if (surrounding[counter]->getColour() != tile->getColour() && surrounding[counter]->getShape() != tile->getShape())
-        {
-          return false;
-        }
+       trackL = j - 1;
       }
-      counter++;
-    }
+     
+      if (board[y][x + j] == nullptr && trackR == 0)
+      {
+        trackR = j-1;
+      }
+      
+      if (board[y + j][x] == nullptr && trackU == 0)
+      {
+        trackU = j-1;
+      }
+     
+      if (board[y - j][x] == nullptr && trackD == 0)
+      {
+        trackD = j-1;
+      }
+      
+  }
+  std::cout << trackD << trackU<< trackR << trackL;
+  if ((trackD + trackU) > 6 || (trackL + trackR) > 6 ) {
+    return false;
+  }
+
+  // while (counter < 8)
+  // {
+  //   if (surrounding[counter] != nullptr )
+  //   {
+  //     if (surrounding[counter]->getColour() != tile->getColour() && surrounding[counter]->getShape() != tile->getShape())
+  //     {
+  //       return false;
+  //     } else if (holder != nullptr && surrounding[counter]->getColour() == ) {
+
+  //     }
+  //   }
+  //   counter++;
+  // }
   return check;
 }
-void QwirkleGame::setBoard(int x, int y, Tile* tile) {
- 
- board[y][x] = tile;
+void QwirkleGame::setBoard(int x, int y, Tile *tile)
+{
 
+  board[y][x] = tile;
 }
 
-void QwirkleGame::setCurrentPlayer(Player* player){
+void QwirkleGame::setCurrentPlayer(Player *player)
+{
 
   currentP = player;
-} 
-Player* QwirkleGame::getCurrentPlayer(){
+}
+Player *QwirkleGame::getCurrentPlayer()
+{
 
   return currentP;
 }
