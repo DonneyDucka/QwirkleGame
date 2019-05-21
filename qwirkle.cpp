@@ -11,7 +11,7 @@
 #define EXIT_SUCCESS 0
 //test
 void newGame();
-void saveGame(std::string string);
+void saveGame(QwirkleGame *g, std::string string2);
 void loadGame();
 void studentInfo();
 
@@ -204,51 +204,8 @@ void newGame()
       }
       else if (string1 == "save")
       {
-
-        outfile.open(string2+".txt");
-
-        //Iterating through each of the players
-        for(Player *p: g->getPlayers())
-        {
-          outfile << p->getName() << "\n";
-          outfile << p->getScore() << "\n";
-
-          for(int i = 0; i < p->getHand()->returnSize(); i++)
-          {
-            if(i != p->getHand()->returnSize() - 1)
-            {
-              outfile << p->getHand()->findNode(i)->getTile()->getTileDets() << ", ";
-            }
-            else
-            {
-              outfile << p->getHand()->findNode(i)->getTile()->getTileDets();
-            }
-          }
-          //Current player details has been written out to the file
-          outfile << "\n";
-        }
-
-          outfile << g->getBoard();
-
-        for( int i = 0; i < g->getBag()->getList()->returnSize(); i++)
-        {
-          if( i!= g->getBag()->getList()->returnSize() - 1)
-          {
-            outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets() << ", ";
-          }
-          else
-          {
-            outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets();
-          }
-        }
-
-        outfile.close();
-
-        std::cout << "\n";
-        std::cout << "Game successfully saved \n";
-        std::cout << "\n";
-
-       }
+        saveGame(g, string2);
+      }
 
        //Debugging
       player->printHand();
@@ -257,6 +214,52 @@ void newGame()
       g->printBoard();
     }
   }
+}
+
+void saveGame(QwirkleGame *g, std::string string2)
+{
+  outfile.open(string2 + ".txt");
+
+  //Iterating through each of the players
+  for (Player *p : g->getPlayers())
+  {
+    outfile << p->getName() << "\n";
+    outfile << p->getScore() << "\n";
+
+    for (int i = 0; i < p->getHand()->returnSize(); i++)
+    {
+      if (i != p->getHand()->returnSize() - 1)
+      {
+        outfile << p->getHand()->findNode(i)->getTile()->getTileDets() << ", ";
+      }
+      else
+      {
+        outfile << p->getHand()->findNode(i)->getTile()->getTileDets();
+      }
+    }
+    //Current player details has been written out to the file
+    outfile << "\n";
+  }
+
+  outfile << g->getBoard();
+
+  for (int i = 0; i < g->getBag()->getList()->returnSize(); i++)
+  {
+    if (i != g->getBag()->getList()->returnSize() - 1)
+    {
+      outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets() << ", ";
+    }
+    else
+    {
+      outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets();
+    }
+  }
+
+  outfile.close();
+
+  std::cout << "\n";
+  std::cout << "Game successfully saved \n";
+  std::cout << "\n";
 }
 
 //Method displays loading the game
@@ -292,31 +295,26 @@ void loadGame()
         int score = std::stoi(line);
         p->getPlayers().at(noOfPlayers-1)->setScore(score);
       }
-      if(counter == 2 || counter == 5)
+      if(counter == 14)
       {
-        while(getline(infile, line))
-        {
           std::stringstream stream(line);
-          getline(stream, new Tile(Color, Shape), ", ");
-        }
-      }
+          std::string tile;
+          //char cstr;
+          //Tile* t;
 
-
-
-
-      if(typeid(line).name() == typeid(std::string).name())
-      {
-        p->addPlayer(line);
-      }
-      else if(counter == 1 || counter == 3)
-      {
-        p->getPlayers().at(noOfPlayers)->setPlayerScore(line);
+          if(counter == 14)
+          {
+            while(stream >> tile)
+            {
+              std::cout << tile.at(0) << std::endl;
+              std::cout << tile.c_str() << std::endl;
+            }
+          }
       }
 
 
       std::cout<<line<<std::endl;
-      std::cout<<counter<<std::endl;
-    counter++;
+      counter++;
     }
 
     infile.close();
@@ -360,7 +358,6 @@ void loadGame()
   //   std::cout << "Failed to open file.";
   // }
 }
-
 
 //Method displays student info
 void studentInfo()
