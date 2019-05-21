@@ -317,13 +317,23 @@ void loadGame()
             }
           }
       }
-      if(8 <= counter <= 13)
+      if( counter >= 8 && counter <= 13)
       {
 
+        std::stringstream stream(line);
+        std::string tileOnBoard;
+
+        // int count = 0;
+        // int x = 0;
+        // int y = 0;
+
+        while(stream >> tileOnBoard)
+        {
+          std::cout << tileOnBoard << std::endl;
+
+        
+        }
       }
-
-
-      //std::cout<<line<<std::endl;
       counter++;
     }
 
@@ -380,5 +390,5 @@ void studentInfo()
             << "Email: s3723430@student.rmit.edu.au" << std::endl;
   std::cout << "------------------------------------" << std::endl;
   std::cout << std::endl;
-
 }
+

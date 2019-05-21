@@ -26,12 +26,11 @@ public:
   bool checkPlacement(int x, int y, Tile* pos);
   std::string getBoard();
   std::vector<Player *> getPlayers();
-
   Bag *getBag();
 
 private:
   int letterToNumber(char a);
-  Tile *board[6][6];
+  Tile *board[26][26];
   std::string boardToString;
   std::vector<Player *> players;
   Bag *bag;

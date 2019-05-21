@@ -204,16 +204,15 @@ void QwirkleGame::fillPlayerHands()
 }
 void QwirkleGame::printBoard()
 {
-  std::cout << "  0  1  2  3  4  5  " << std::endl;
-  std::cout << " ------------------- " << std::endl;
+  std::cout << "  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25" << std::endl;
+  std::cout << " ------------------------------------------------------------------------------- " << std::endl;
 
-  boardToString = "  0  1  2  3  4  5  \n ------------------- \n";
+  boardToString = "  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 \n ------------------------------------------------------------------------------- \n";
 
   char a = 'A';
-  for (int i = 0; i < 6; i++)
+  for (int i = 0; i < 26; i++)
   {
-
-    for (int j = 0; j < 6; j++)
+    for (int j = 0; j < 26; j++)
     {
       if (j == 0)
       {
@@ -234,7 +233,7 @@ void QwirkleGame::printBoard()
         std::cout << board[i][j]->getTileDets();
         boardToString += board[i][j]->getTileDets();
       }
-      if (j == 5)
+      if (j == 25)
       {
         std::cout << "|";
         boardToString += "|";
