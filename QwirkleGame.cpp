@@ -41,43 +41,50 @@ QwirkleGame::~QwirkleGame()
   delete bag;
 }
 
-bool QwirkleGame::placeTile(std::string placement, Player *player)
+bool QwirkleGame::placeTile(std::string placement)
 {
   bool check = false;
   std::string tile = placement.substr(1, 2);
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
-  if (placement.length() > 8) {
-    y = placement.substr(8, 2);
-
-  }
+  std::string y2;
+  int twoDigit;
+  
+  
   std::string code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   bool p = (code.find(x) != std::string::npos);
    Tile *tileInHand = nullptr;
-  int x2n = letterToNumber(*x.c_str());
-  int y2n = std::atoi(y.c_str());
+  int y2n = letterToNumber(*x.c_str());
+  int x2n = std::atoi(y.c_str());
   int i = 0;
+
+  if (placement.length() > 9) {
+    y2 = placement.substr(9,1);
+    twoDigit = (10*x2n) + (std::atoi(y2.c_str()));
+    std::cout << twoDigit;
+    x2n = twoDigit;
+  }
   
   if (p == false ) {
     std::cout << "incorrect tile entered";
     return false;
   }
-  else if (y2n < 26 && x2n < 26)
+  else if (x2n < 26 && y2n < 26)
   {
     while (tileInHand == nullptr && i < 6)
     {
 
-      if (player->getHand()->findNode(i)->getTile()->getTileDets() == tile)
+      if (currentP->getHand()->findNode(i)->getTile()->getTileDets() == tile)
       {
-        if ((checkPlacement(x2n, y2n, tileInHand)) == true)
+        if ((checkPlacement(y2n, x2n, tileInHand)) == true)
         {
-         tileInHand = player->getHand()->findNode(i)->getTile();
-         board[x2n][std::atoi(y.c_str())] = tileInHand;
+         tileInHand = currentP->getHand()->findNode(i)->getTile();
+         board[y2n][x2n] = tileInHand;
          bag->getList()->addBack(tileInHand);
-         player->getHand()->deleteNode(i);
+         currentP->getHand()->deleteNode(i);
          Node *pickedTile = bag->pickFromBag();
-         player->getHand()->addAt(i, pickedTile);
-         allocatePoints(x2n,y2n,player);
+         currentP->getHand()->addAt(i, pickedTile);
+         allocatePoints(y2n,x2n,currentP);
           return true;
         }
         else
@@ -161,7 +168,7 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   player->setScore(totalpoints);
 }
 
-bool QwirkleGame::replaceTile(std::string replacement, Player *player)
+bool QwirkleGame::replaceTile(std::string replacement)
 {
   /*  - replace a tile (in their hand) -> remove tile from player hand,
    *                               IF player has two tiles in same name,
@@ -174,15 +181,15 @@ bool QwirkleGame::replaceTile(std::string replacement, Player *player)
 
   if (replacement.length() == 3)
   {
-    for (int k = 0; k < player->getHand()->returnSize(); k++)
+    for (int k = 0; k < currentP->getHand()->returnSize(); k++)
     {
-      if (player->getHand()->findNode(k)->getTile()->getTileDets() == tile)
+      if (currentP->getHand()->findNode(k)->getTile()->getTileDets() == tile)
       {
-        tileInHand = player->getHand()->findNode(k)->getTile();
+        tileInHand = currentP->getHand()->findNode(k)->getTile();
         bag->getList()->addBack(tileInHand);
-        player->getHand()->deleteNode(k);
+        currentP->getHand()->deleteNode(k);
         Node *pickedTile = bag->pickFromBag();
-        player->getHand()->addAt(k, pickedTile);
+        currentP->getHand()->addAt(k, pickedTile);
         check = true;
       }
     }
@@ -278,7 +285,7 @@ std::string QwirkleGame::getBoard()
 
 bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
 {
-  bool check = true;
+  bool check = true; 
   int counter = 0;
 
     // left            right            bottom           top
@@ -290,15 +297,26 @@ bool QwirkleGame::checkPlacement(int x, int y, Tile *tile)
 
       if (surrounding[counter] != nullptr)
       {
-
         if (surrounding[counter]->getColour() != tile->getColour() && surrounding[counter]->getShape() != tile->getShape())
         {
-          check = false;
-          return check;
+          return false;
         }
       }
       counter++;
     }
   return check;
 }
+void QwirkleGame::setBoard(int x, int y, Tile* tile) {
+ 
+ board[y][x] = tile;
 
+}
+
+void QwirkleGame::setCurrentPlayer(Player* player){
+
+  currentP = player;
+} 
+Player* QwirkleGame::getCurrentPlayer(){
+
+  return currentP;
+}

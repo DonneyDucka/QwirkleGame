@@ -14,6 +14,7 @@ void newGame();
 void saveGame(QwirkleGame *g, std::string string2);
 void loadGame();
 void studentInfo();
+void runGame(QwirkleGame *g);
 
 std::string input;
 std::string playerOne;
@@ -25,6 +26,10 @@ std::string line;
 
 std::ofstream outfile;
 std::ifstream infile;
+
+int x_count = 0;
+int y_count = 0;
+int loopCount = 0;
 
 int main(void)
 {
@@ -104,7 +109,6 @@ void newGame()
   }
 
   std::cout << "Enter a name for player 2 (uppercase characters only)" << std::endl;
-
   //Code duplication, we need to create a method for it
   while (capsn2 == false)
   {
@@ -123,6 +127,11 @@ void newGame()
       std::cout << "Try Again, your name was not in uppercase" << std::endl;
     }
     capsn2 = temp;
+    if (playerTwo == playerOne)
+    {
+      std::cout << "Name has been taken, please try again" << std::endl;
+      capsn2 = false;
+    }
   }
   std::cout << "Let's Play!" << std::endl;
   std::cout << std::endl;
@@ -131,6 +140,7 @@ void newGame()
   QwirkleGame *g = new QwirkleGame();
   //Filling the bag
   g->getBag()->fillBag();
+
   //Adding players -> However, we need to alter this as the amount of players is dynamic for milestone 3
   g->addPlayer(playerOne);
   g->addPlayer(playerTwo);
@@ -140,6 +150,8 @@ void newGame()
   g->fillPlayerHands();
 
   //GameEngine commences
+
+  runGame(g);
 
   /*
     **PSEUDOCODE**
@@ -161,73 +173,6 @@ void newGame()
     END OF current player's turn
 
   */
-  while (g->getBag()->getSize() != 0)
-  {
-    for (Player *player : g->getPlayers())
-    {
-
-      //Displaying the current player's turn
-      std::cout << player->getName() << ", it's your turn" << '\n'
-                << std::endl;
-
-      //Displaying the scoreboard
-      for (Player *playerlist : g->getPlayers())
-      {
-        std::cout << playerlist->getName() << "'s score: " << playerlist->getScore() << std::endl;
-      }
-
-      //Newline for neatness
-      std::cout << std::endl;
-
-      //Printing the board for viewing
-      g->printBoard();
-      std::cout << std::endl;
-
-      //Printing the current players hand
-      std::cout << "Your hand is.." << std::endl;
-      player->printHand();
-      bool moveMade = false;
-
-      while (moveMade == false)
-      {
-
-        //Reading in player input
-        std::string string1, string2;
-        std::getline(std::cin >> string1, string2);
-        for (int i = 0; i < string1.length(); i++)
-        {
-          std::tolower(string1[i]);
-        }
-
-        //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
-        if (string1 == "place" && string2.size() == 9)
-        {
-          moveMade = g->placeTile(string2, player);
-          if (!moveMade)
-          {
-            std::cout << "Invalid move. Please enter a valid move" << std::endl;
-          }
-        }
-        else if (string1 == "replace")
-        {
-          moveMade = g->replaceTile(string2, player);
-          if (!moveMade)
-          {
-            std::cout << "Invalid move. Please enter a valid move" << std::endl;
-          }
-        }
-        else if (string1 == "save")
-        {
-          saveGame(g, string2);
-          moveMade = true;
-        }
-      }
-
-      player->printHand();
-      //Reprinting the board
-      g->printBoard();
-    }
-  }
 }
 
 void saveGame(QwirkleGame *g, std::string string2)
@@ -268,6 +213,9 @@ void saveGame(QwirkleGame *g, std::string string2)
       outfile << g->getBag()->getList()->findNode(i)->getTile()->getTileDets();
     }
   }
+  outfile << "\n";
+  outfile << g->getCurrentPlayer()->getName();
+
 
   outfile.close();
 
@@ -307,7 +255,7 @@ void loadGame()
         p->getPlayers().at(noOfPlayers - 1)->setScore(score);
       }
       //These lines occupy tile contents, whether it is the player's hands or the tiles in the bag
-      if ( counter == 2 || counter == 5 || counter == 34 )
+      if (counter == 2 || counter == 5 || counter == 34)
       {
         std::stringstream stream(line);
         std::string tile;
@@ -333,43 +281,160 @@ void loadGame()
           }
         }
       }
-
       //These lines work with the tiles that are on the board
-      if( counter >= 8 && counter <= 33)
+      if (counter >= 8 && counter <= 33)
       {
 
-        int x_count = 0;
-        int y_count = 0;
         std::stringstream stream(line);
         std::string tileOnBoard;
 
-        while(stream >> tileOnBoard)
+        while (std::getline(stream, tileOnBoard, '|'))
         {
-          std::cout << tileOnBoard << std::endl;
+          if (loopCount == 0)
+          {
+            x_count--;
+            loopCount++;
+          }
+
+          if (tileOnBoard[0] != ' ' && tileOnBoard[1] != ' ' && x_count != -1)
+          {
+            Tile *t = new Tile(tileOnBoard[0], (int)tileOnBoard[1] - 48);
+            p->setBoard(x_count, y_count, t);
+          }
+
+          x_count++;
+
+          if (x_count == 26)
+          {
+            x_count = 0;
+            y_count++;
+            loopCount = 0;
+          }
         }
-
-
       }
-
-
-      else
+      if (counter == 34)
       {
-        counter++;
+
+        for (Player *pla : p->getPlayers())
+        {
+          if (pla->getName() == line)
+          {
+            p->setCurrentPlayer(pla);
+          }
+        }
       }
-    
-      std::cout << line << std::endl;
-   
+
+      counter++;
+
+      //std::cout << line << std::endl;
     }
+
+    p->printBoard();
 
     infile.close();
 
     std::cout << std::endl;
     std::cout << "Qwirkle game successfully loaded" << std::endl;
     std::cout << std::endl;
+
+    runGame(p);
   }
   else
   {
     std::cout << "File could not be loaded." << std::endl;
+  }
+}
+
+void runGame(QwirkleGame *g)
+{
+
+  //int count = 0;
+
+  while (g->getBag()->getSize() != 0)
+  {
+    for (Player *player : g->getPlayers())
+    { 
+      
+       g->setCurrentPlayer(player);
+      
+
+      // if (g->getCurrentPlayer()->getName() == player->getName())
+      // {
+        //Displaying the current player's turn
+
+        std::cout << player->getName() << ", it's your turn" << '\n'
+                  << std::endl;
+
+        //Displaying the scoreboard
+        for (Player *playerlist : g->getPlayers())
+        {
+          std::cout << playerlist->getName() << "'s score: " << playerlist->getScore() << std::endl;
+        }
+
+        //Newline for neatness
+        std::cout << std::endl;
+
+        //Printing the board for viewing
+        g->printBoard();
+        std::cout << std::endl;
+
+        //Printing the current players hand
+        std::cout << "Your hand is.." << std::endl;
+        player->printHand();
+        bool moveMade = false;
+
+        while (moveMade == false)
+        {
+          //Reading in player input
+          std::string string1, string2;
+          std::getline(std::cin >> string1, string2);
+          for (int i = 0; i < string1.length(); i++)
+          {
+            std::tolower(string1[i]);
+          }
+
+          //If statement to be embeded here for PLACING, REPLACING or SAVING GAME
+          if (string1 == "place")
+          {
+            moveMade = g->placeTile(string2);
+            if (!moveMade)
+            {
+              std::cout << "Invalid move. Please enter a valid move." << std::endl;
+            }
+          }
+          else if (string1 == "replace")
+          {
+            moveMade = g->replaceTile(string2);
+            if (!moveMade)
+            {
+              std::cout << "Invalid move. Please enter a valid move." << std::endl;
+            }
+          }
+          else if (string1 == "save")
+          {
+            saveGame(g, string2);
+            moveMade = true;
+          }
+          else
+          {
+            std::cout << "Invalid command. Please enter a valid command." << std::endl;
+          }
+        }
+        //Reprinting the board
+        g->printBoard();
+
+        // if (g->getPlayers()[count + 1] != NULL)
+        // {
+        //   g->setCurrentPlayer(g->getPlayers()[count + 1]);
+        //   count++;
+        // }
+        // else
+        // {
+        //   g->setCurrentPlayer(g->getPlayers()[0]);
+        //   count = 0;
+        // }
+      //}
+    }
   }
 }
 

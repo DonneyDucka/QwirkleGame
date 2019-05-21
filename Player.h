@@ -26,6 +26,7 @@ public:
    void setPlayerScore(int score);
    void setPlayerHand(Tile* tile);
 
+ 
 private:
    LinkedList* hand;
    std::string playerName;

@@ -17,9 +17,9 @@ public:
   QwirkleGame();
   ~QwirkleGame();
 
-  bool placeTile(std::string placement, Player* player);
+  bool placeTile(std::string placement);
   void allocatePoints(int x, int y, Player* player);
-  bool replaceTile(std::string replacement, Player* player);
+  bool replaceTile(std::string replacement);
   void addPlayer(std::string name);
   void fillPlayerHands();
   void printBoard();
@@ -27,13 +27,17 @@ public:
   std::string getBoard();
   std::vector<Player *> getPlayers();
   Bag *getBag();
+  void setBoard(int x, int y, Tile* tile);
+  void setCurrentPlayer(Player* player);
+  Player* getCurrentPlayer();
 
 private:
   int letterToNumber(char a);
-  Tile *board[26][26];
+  Tile *board[27][27];
   std::string boardToString;
   std::vector<Player *> players;
   Bag *bag;
+  Player* currentP;
 };
 
 #endif // ASSIGN2_QWIRKLEGAME_H
