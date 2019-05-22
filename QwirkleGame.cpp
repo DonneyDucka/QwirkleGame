@@ -7,18 +7,13 @@
 
 /* This class is for the board, where moves are made and pieces set into the board
  *
- * We need to create an algorithm so that the columns and rows expand(?) to
- * a maximum of 26. (0 -> 25)
- *
  * METHODS INCLUDE:
  *   - place tile (on the board) -> put tile on board, remove from hand
  *
- *   - replace a tile (in their hand) -> remove tile from player hand,
- *                               IF player has two tiles in same name,
- *                                then first tile should be replaced.
+ *   - replace a tile 
+ * 
+ *   - checking the trend
  *
- *    NEED TO GET ALGORITHM TO MAKE THE PLACED TILE ON BOARD LOOK
- *    IN ALL DIRECTIONS AND SEE IF IT CAN GET POINTS
  */
 
 QwirkleGame::QwirkleGame()
@@ -41,6 +36,12 @@ QwirkleGame::~QwirkleGame()
   delete bag;
 }
 
+/*
+  Placing the tile takes in the string of the user's input, which is then allocated to 3 substrings.
+  The first substring is parsed to a tile, where we create the tile, then the second and third substring
+  is parsed to an int, where it acts as the coordinates of the placement. We then have check conditions
+  such as allocating points, checking for valid tile, and checking the bag.
+*/
 bool QwirkleGame::placeTile(std::string placement)
 {
   bool check = false;
@@ -120,6 +121,12 @@ bool QwirkleGame::placeTile(std::string placement)
   return check;
 }
 
+/*
+  Allocate points is a method that checks the horizontal and vertical surroundings of the placed tile,
+  utilising a counter that incremements if there is a piece.
+  We then use the counter to add it to the total points initialised locally, then set it to the player
+  that was sent into the parameters
+*/
 void QwirkleGame::allocatePoints(int x, int y, Player *player)
 {
   int trackVer = 0;
@@ -179,7 +186,7 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   //Qwirkle accounts for 6 points
   if (trackHor == 5 || trackVer == 5)
   {
-    std::cout << "QWIRKLE" << std::endl;
+    std::cout << "QWIRKLE!!!" << std::endl;
     totalpoints += 6;
   }
 
@@ -193,14 +200,16 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   player->setScore(totalpoints);
 
 }
-
+/*
+  Replacing the tile takes in a string, where the string is turned to a substring.
+  The tile being replaced will then get added back to the list (in the bag) and the player will
+  pick the bag from the front of the list (in the bag).
+  Will also check if bag is empty,
+  IF empty, then return nothing, cal that bag is empty and unable to replace tile.
+  We assume turn is taken.
+*/
 bool QwirkleGame::replaceTile(std::string replacement)
 {
-  /*  - replace a tile (in their hand) -> remove tile from player hand,
-   *                               IF player has two tiles in same name,
-   *                                then first tile should be replaced.
-   */
-
   Tile *tileInHand = nullptr;
   bool check = false;
   std::string tile = replacement.substr(1, 2);
@@ -235,23 +244,23 @@ bool QwirkleGame::replaceTile(std::string replacement)
 
   return check;
 }
-
+//gets the bag
 Bag *QwirkleGame::getBag()
 {
   return bag;
 }
-
+//adds player to the game
 void QwirkleGame::addPlayer(std::string name)
 {
   Player *p = new Player(name, 0);
   players.push_back(p);
 }
-
+//gets the list of players
 std::vector<Player *> QwirkleGame::getPlayers()
 {
   return players;
 }
-
+//fills the hands of the player from the bag
 void QwirkleGame::fillPlayerHands()
 {
   for (int i = 0; i < players.size(); i++)
@@ -259,6 +268,7 @@ void QwirkleGame::fillPlayerHands()
     players.at(i)->fillHand(bag);
   }
 }
+//prints the board of the qwirkle game
 void QwirkleGame::printBoard()
 {
   std::cout << "  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25" << std::endl;
@@ -311,7 +321,7 @@ int QwirkleGame::letterToNumber(char word)
   }
   return x - 65;
 }
-
+//gets board
 std::string QwirkleGame::getBoard()
 {
   return boardToString;
@@ -341,6 +351,11 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   {
     return true;
   }
+  /*  The for loop simutaneously tracks the rows and coloumns from the positions of the placed
+  tile.
+   if the length is obtained during the loop in any direction is greater than 5 the tile cannot be placed
+   hence false is returned;
+  */
 
   for (int j = 1; j < 8; j++)
   {
@@ -388,18 +403,36 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   else
     check = true;
 
-  // left            right            bottom           top
+  
   Tile *surrounding[8] =
       {board[y][x - 1], board[y][x - 2], board[y][x + 1], board[y][x + 2], board[y + 1][x], board[y + 2][x], board[y - 1][x], board[y - 2][x]};
-
+//1st block to the left, 2nd to the left, 1st to the right, 2nd block on the right, 1st block on the top, 2nd block the top, 1st block on the bottom, 2nd block on the bottom
+  // the surroundings of the block are placed inside a 
   int shapeOrColour = 0;
 
   int counter = 0;
   bool valid = false;
   bool horEm = false;
   bool verEm = false;
+  
+  /*  
+    **PSEUDO**
+    -Iterate the through the surroudings array, using the 1st and the 4th block as our basis for comparison
+    -  As we iterate we compare the the 1st block to the left, 
+      if (1st block is null){
+      move on to the other side
+    } else { hold the trend of the left side and compare with the other} 
+    
+    - If (conditions are met) {
+      we can move on to the next check the verticals; 
+    }
+
+    - Since we use on the 1st and 4th elements in the surroudings array iterate the counter by 4. 
+    -  Using the 4th element in the surroundings array, we can filter to the to see if the verticals are valid
+    - If all is valid, valid is returned as true, else a false is returned to the placement method.
+  */
   while (counter < 5)
-  {
+  { 
     if (surrounding[counter] != nullptr)
     {
       valid = false;
@@ -413,15 +446,13 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       else if (surrounding[counter + 1] != nullptr &&
                surColour == surrounding[counter + 1]->getColour() && surColour == tile->getColour())
       {
-        std::cout << "Place ONE" << counter << std::endl;
         if (surrounding[counter + 2] == nullptr)
-        {
-          std::cout << "run 1" << counter << std::endl;
+        { 
           valid = true;
         }
         else if (surrounding[counter + 2]->getColour() == surColour)
         {
-          std::cout << "run 2" << counter << std::endl;
+          
           shapeOrColour = 1;
         }
       }
@@ -489,11 +520,15 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     }
     counter += 4;
   }
-
+ // a comparison to see whether the spot has been taken, if it has you cannot place a tile there.
   if (board[y][x] != nullptr)
   {
     return false;
   }
+ /* because we check the horizontals first, 
+    we need to save a boolean to check tell if the horizontal row is emtpy,
+    if the vertical is not empty  it can still place.
+ */
   if (horEm == true && verEm == false)
   {
     return true;
@@ -502,9 +537,10 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   return valid;
 }
 
+//A boolean function to check if any of the player's hands are empty, to which it will end the game and check the score
 bool QwirkleGame::gameFinished()
 {
-
+//This function game finished is a condition set in the while loop
   bool playerHandEmpty = false;
 
   for (int i = 0; i < players.size(); i++)
@@ -524,11 +560,13 @@ bool QwirkleGame::gameFinished()
   return false;
 }
 
+//sets the position of the board to the tile meant to be placed
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
   board[y][x] = tile;
 }
 
+//sets the current player of the turn
 void QwirkleGame::setCurrentPlayer(Player *player)
 {
   currentP = player;

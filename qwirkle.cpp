@@ -216,6 +216,7 @@ void saveGame(QwirkleGame *g, std::string string2)
   }
   outfile << "\n";
   outfile << g->getCurrentPlayer()->getName();
+  
 
 
   outfile.close();
