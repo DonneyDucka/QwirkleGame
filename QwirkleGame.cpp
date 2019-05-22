@@ -197,7 +197,6 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   }
   for (int i = 26; i > x; i--)
   {
-
     if (board[i][y] != nullptr && i >= y)
     {
       trackVer++;
@@ -209,7 +208,7 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   }
 
   //Score is calculated for surrounding nodes
-  int totalpoints = trackHor + trackVer;
+  int totalpoints = trackHor + trackVer + 1;
 
   //Qwirkle accounts for 6 points
   if (trackHor == 5 || trackVer == 5)
@@ -223,11 +222,6 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   {
     totalpoints += 2;
   }
- if(trackVer == 0 && trackHor == 0) {
-
-  totalpoints  = 1;
- }
-
 
   //Setting the score
   player->setScore(totalpoints);
@@ -382,7 +376,8 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     }
   }
   if (empty)
-  {
+  { 
+    
     return true;
   }
   /*  The for loop simutaneously tracks the rows and coloumns from the positions of the placed
@@ -570,7 +565,6 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     }
     counter += 4;
   }
-  std::cout <<  shapeOrColour << " " << shapeOrColour2 << std::endl;
   if(shapeOrColour == shapeOrColour2) {
     valid = true;
   } else if ((shapeOrColour == 0) || (shapeOrColour2 == 0)){
