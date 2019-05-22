@@ -480,8 +480,6 @@ bool playerHandEmpty = false;
   return false;
 }
 
-
-
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
 
