@@ -48,7 +48,7 @@ bool QwirkleGame::placeTile(std::string placement)
   //checking if the input/string was a valid length
   if ( placement.length() < 8 ) {
    
-   std::cout << "You have enter an invalid input" << std::endl;
+   std::cout << "You have entered an invalid input" << std::endl;
 
    return false; 
   } 
@@ -80,7 +80,7 @@ bool QwirkleGame::placeTile(std::string placement)
  
   if (p == false)
   {
-    std::cout << "incorrect tile entered";
+    std::cout << "Incorrect tile entered";
     return false;
   }
   else if (x2n < 26 && y2n < 26) //keeping the coordinates from going out of bounds 
