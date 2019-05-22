@@ -286,63 +286,131 @@ std::string QwirkleGame::getBoard()
 
 bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
 {
-  bool check = true;
-  // bool shapeOrCol = false;
-  // int counter = 0;
+  bool check = false;
+  int counter = 0;
   int trackR = 0;
   int trackL = 0;
   int trackU = 0;
   int trackD = 0;
-  // Tile *holder = nullptr;
+  bool empty = false;
 
-  // left            right            bottom           top
-  // Tile *surrounding[8] =
-  //     {board[y][x- 1], board[y][x-2] ,board[y][x + 1],board[y][x+2], board[y + 1][x],board[y+2][x], board[y - 1][x],board[y-2][x]};
-
-  
-
-    for (int j = 1; j < 8; j++)
+  for (int i = 0; i < 27; i++)
+  {
+    for (int l = 0; l < 27; l++)
     {
 
-      if (board[y][x - j] == nullptr && trackL == 0)
+      if (board[i][l] == nullptr)
       {
-       trackL = j - 1;
+        empty = true;
       }
-     
-      if (board[y][x + j] == nullptr && trackR == 0)
-      {
-        trackR = j-1;
-      }
-      
-      if (board[y + j][x] == nullptr && trackU == 0)
-      {
-        trackU = j-1;
-      }
-     
-      if (board[y - j][x] == nullptr && trackD == 0)
-      {
-        trackD = j-1;
-      }
-      
+      else
+        empty = false;
+    }
   }
-  std::cout << trackD << trackU<< trackR << trackL;
-  if ((trackD + trackU) > 6 || (trackL + trackR) > 6 ) {
+
+  if (empty == true)
+  {
+    return true;
+  }
+
+  for (int j = 1; j < 8; j++)
+  {
+
+    if (board[y][x - j] == nullptr && trackL == 0)
+    {
+      trackL = j - 1;
+    }
+
+    if (board[y][x + j] == nullptr && trackR == 0)
+    {
+      trackR = j - 1;
+    }
+
+    if (board[y + j][x] == nullptr && trackU == 0)
+    {
+      trackU = j - 1;
+    }
+
+    if (board[y - j][x] == nullptr && trackD == 0)
+    {
+      trackD = j - 1;
+    }
+  }
+  std::cout << trackD << trackU << trackR << trackL;
+  if ((trackD + trackU) > 6 || (trackL + trackR) > 6)
+  {
     return false;
   }
 
-  // while (counter < 8)
-  // {
-  //   if (surrounding[counter] != nullptr )
-  //   {
-  //     if (surrounding[counter]->getColour() != tile->getColour() && surrounding[counter]->getShape() != tile->getShape())
-  //     {
-  //       return false;
-  //     } else if (holder != nullptr && surrounding[counter]->getColour() == ) {
+  // left            right            bottom           top
+  Tile *surrounding[8] =
+      {board[y][x - 1], board[y][x - 2], board[y][x + 1], board[y][x + 2], board[y + 1][x], board[y + 2][x], board[y - 1][x], board[y - 2][x]};
+  int seperator = 0;
+  int shapeOrColour = 0;
+  while (counter < 4)
+  {
+    if (surrounding[counter] != nullptr)
+    {
+      Colour surColour = surrounding[counter]->getColour();
+      Shape surShape = surrounding[counter]->getShape();
 
-  //     }
-  //   }
-  //   counter++;
-  // }
+      if (surColour != tile->getColour() && surShape != tile->getShape())
+      {
+        return false;
+      }
+      else if (surrounding[counter + 1] != nullptr &&
+               surColour == surrounding[counter + 1]->getColour() && surColour == tile->getColour())
+      {
+        if (seperator == 1 && (surrounding[counter + 2] == nullptr))
+        {
+          return true;
+        }
+        else if (seperator == 1 && (surrounding[counter + 2]->getColour() == surColour))
+        {
+          shapeOrColour = 1;
+        }
+      }
+      else if (surrounding[counter + 1] != nullptr &&
+               surShape == surrounding[counter + 1]->getShape() && surShape == tile->getShape())
+      {
+        if (seperator == 1 && (surrounding[counter + 2] == nullptr))
+        {
+          return true;
+        }
+        else if (seperator == 1 && (surrounding[counter + 2]->getShape() == surShape))
+        {
+          shapeOrColour = 2;
+        }
+      }
+      else
+      {
+        if ( shapeOrColour == 2 &&
+          (surrounding[counter + 2]->getShape() == surShape) && (surrounding[counter + 3]->getShape() == surShape ))
+        {
+          return true;
+        }
+        else if (shapeOrColour == 1 &&
+          (surrounding[counter + 2]->getColour() == surShape) && (surrounding[counter + 3]->getColour() == surShape ))
+        {
+          return true;
+        }
+      }
+    }
+    else {
+
+      if ( surrounding[counter + 2]->getShape() == tile->getShape() &&
+          (surrounding[counter + 2]->getShape() == surrounding[counter + 3]->getShape()))
+        {
+          return true;
+        }
+        else if (surrounding[counter + 2]->getColour() == tile->getColour() &&
+          (surrounding[counter + 2]->getColour() == surrounding[counter + 3]->getColour()))
+        {
+          return true;
+        }
+    }
+    counter += 3;
+  }
   return check;
 }
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
