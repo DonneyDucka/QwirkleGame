@@ -365,7 +365,7 @@ void loadGame()
   }
   else //Milestone 3 - Better invalid input
   {
-    std::cout << "File could not be loaded, the you have inputted does not exist." << std::endl;
+    std::cout << "File could not be loaded, the file you inputted does not exist." << std::endl;
   }
 }
 
