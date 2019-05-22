@@ -12,7 +12,7 @@
  *
  *   - replace a tile 
  * 
- *   - checking the trend
+ *   - checking the trend (same shape or same color)
  *
  */
 
@@ -349,7 +349,8 @@ int QwirkleGame::letterToNumber(char word)
   }
   return x - 65;
 }
-//gets board
+
+//Gets board
 std::string QwirkleGame::getBoard()
 {
   return boardToString;
@@ -552,14 +553,14 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     }
     counter += 4;
   }
- // a comparison to see whether the spot has been taken, if it has you cannot place a tile there.
+ // A comparison to see whether the spot has been taken, if it has you cannot place a tile there.
   if (board[y][x] != nullptr)
   {
     return false;
   }
- /* because we check the horizontals first, 
+ /* Because we check the horizontals first, 
     we need to save a boolean to check tell if the horizontal row is emtpy,
-    if the vertical is not empty  it can still place.
+    if the vertical is not empty it can still place.
  */
   if (horEm == true && verEm == false)
   {
@@ -592,13 +593,13 @@ bool QwirkleGame::gameFinished()
   return false;
 }
 
-//sets the position of the board to the tile meant to be placed
+//Sets the position of the board to the tile meant to be placed
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
   board[y][x] = tile;
 }
 
-//sets the current player of the turn
+//Sets the current player of the turn
 void QwirkleGame::setCurrentPlayer(Player *player)
 {
   currentP = player;
