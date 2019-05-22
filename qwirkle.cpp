@@ -144,7 +144,7 @@ void newGame()
 
   //Initializing the QwirkleGame, in here the bag is created and board is generated
   QwirkleGame *g = new QwirkleGame();
-  
+
   //Filling the bag
   g->getBag()->fillBag();
 
@@ -176,7 +176,7 @@ void newGame()
         REMOVE tile from player hand and add it to back of the bag linked list
         TAKE first tile from bag
         PLACE in player hand
-      IF SAVE 
+      IF SAVE
         SAVE the file
       IF HELP
         DISPLAY the help method for the player
@@ -229,6 +229,8 @@ void saveGame(QwirkleGame *g, std::string string2)
     }
   }
   outfile << "\n";
+  outfile << g->getCurrentPlayer()->getName();
+
 
   //Prints the current player to the outfile
   outfile << g->getCurrentPlayer()->getName();
@@ -526,11 +528,11 @@ void howToPlay()
             << "For example, if you place a tile and create a line of 4, you will score 4 points! If you place a tile. \n"
             << "and it creates two lines, you will score an addition 2 points plus the amount of tiles that are        \n"
             << "in both of the lines! If you create a line that has 6 tiles, that is called a QWIRKLE! You will earn   \n"
-            << "an additional 6 points as well as one point per tile. So what are you waiting for?                  \n \n"       
-            << "For in game commands as well as saving the game, please type 'help' once you commence your game.    \n \n" 
-            << "Good luck! \n"                                                                          
+            << "an additional 6 points as well as one point per tile. So what are you waiting for?                  \n \n"
+            << "For in game commands as well as saving the game, please type 'help' once you commence your game.    \n \n"
+            << "Good luck! \n"
             << std::endl;
-} 
+}
 
 //Method displays student info
 void studentInfo()

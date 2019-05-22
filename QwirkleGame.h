@@ -30,6 +30,8 @@ public:
   void setBoard(int x, int y, Tile* tile);
   void setCurrentPlayer(Player* player);
   Player* getCurrentPlayer();
+  
+  
 
   bool gameFinished();
 
@@ -40,6 +42,7 @@ private:
   std::vector<Player *> players;
   Bag *bag;
   Player* currentP;
+  std::vector<Player *> highScoring[5];
 };
 
 #endif // ASSIGN2_QWIRKLEGAME_H
