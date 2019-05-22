@@ -413,6 +413,31 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   }
   return check;
 }
+
+bool QwirkleGame::gameFinished()
+{
+
+bool playerHandEmpty = false;
+
+  for(int i = 0; i < players.size(); i++)
+  {
+    if(players[i]->getHand()->returnSize() == 0)
+    {
+      players[i]->setScore(6);
+      playerHandEmpty = true;
+    }
+  }
+
+  if(bag->getSize() == 0 && playerHandEmpty)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+
+
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
 

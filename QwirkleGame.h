@@ -31,6 +31,8 @@ public:
   void setCurrentPlayer(Player* player);
   Player* getCurrentPlayer();
 
+  bool gameFinished();
+
 private:
   int letterToNumber(char a);
   Tile *board[27][27];
