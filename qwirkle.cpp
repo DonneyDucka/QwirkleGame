@@ -35,7 +35,7 @@ int main(void)
   std::cout << std::endl;
   std::cout << "Welcome to Qwirkle!"
             << "\n"
-            << "------------------------------------" << std::endl;
+            << "--------------------" << std::endl;
   while (input != "4")
   {
     std::cout
@@ -273,7 +273,7 @@ void loadGame()
             Tile *t = new Tile(tile.at(0), (int)tile.at(1) - 48);
 
             p->getPlayers().at(noOfPlayers - 1)->getHand()->addNode(t);
-            
+
           }
         }
         //the 33rd line occupy the tiles in the bag
@@ -440,9 +440,8 @@ void runGame(QwirkleGame *g)
             std::cout << "Invalid command. Please enter a valid command." << std::endl;
           }
         }
-        //Reprinting the board
-        std::cout << std::endl;
-        g->printBoard();
+
+        //Newline for neatness
         std::cout << std::endl;
 
         //Alternating between the players and ensuring that the vector does not go out of bounds
@@ -461,7 +460,7 @@ void runGame(QwirkleGame *g)
 
     //The while loop ends when the game has finished
     std::cout << "Game over!" << std::endl;
-    std::cout << "------------------------------------" << std::endl;
+    std::cout << "-----------" << std::endl;
 
     int temp = 0;
     std::string winner;
@@ -482,7 +481,7 @@ void runGame(QwirkleGame *g)
       std::cout << "Score for " << p->getName() << ": " << p->getScore() << std::endl; 
     }
 
-    std::cout << winner << std::endl; 
+    std::cout << winner << "\n" << std::endl; 
 }
 
 //Method displays student info

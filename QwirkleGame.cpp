@@ -81,10 +81,14 @@ bool QwirkleGame::placeTile(std::string placement)
         if ((checkPlacement(y2n, x2n, tileInHand)) == true)
         {
           board[y2n][x2n] = tileInHand;
-          bag->getList()->addBack(tileInHand);
+
           currentP->getHand()->deleteNode(i);
+
+          //std::cout << bag->getSize();
+
           if (bag->getSize() != 0)
           {
+            bag->getList()->addBack(tileInHand);
             Node *pickedTile = bag->pickFromBag();
             currentP->getHand()->addAt(i, pickedTile);
           }
@@ -92,6 +96,7 @@ bool QwirkleGame::placeTile(std::string placement)
           {
             std::cout << "The bag is empty" << std::endl;
           }
+
           allocatePoints(y2n, x2n, currentP);
           return true;
         }
@@ -167,13 +172,26 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
       trackVer = 0;
     }
   }
-  if (trackHor == 6 || trackVer == 6)
-  {
-    std::cout << "QWIRKLE" << std::endl;
-  }
+
+  //Score is calculated for surrounding nodes
   int totalpoints = trackHor + trackVer;
 
+  //Qwirkle accounts for 6 points
+  if (trackHor == 5 || trackVer == 5)
+  {
+    std::cout << "QWIRKLE" << std::endl;
+    totalpoints += 6;
+  }
+
+  //If a tile is placed in two lines, that tile we placed is 2 points 
+  if(trackHor > 0 && trackVer > 0) 
+  {
+    totalpoints += 2;
+  } 
+
+  //Setting the score
   player->setScore(totalpoints);
+
 }
 
 bool QwirkleGame::replaceTile(std::string replacement)
@@ -194,11 +212,12 @@ bool QwirkleGame::replaceTile(std::string replacement)
       if (currentP->getHand()->findNode(k)->getTile()->getTileDets() == tile)
       {
         tileInHand = currentP->getHand()->findNode(k)->getTile();
-        bag->getList()->addBack(tileInHand);
         currentP->getHand()->deleteNode(k);
-        if (bag->getSize() != 0) {
-        Node *pickedTile = bag->pickFromBag();
-        currentP->getHand()->addAt(k, pickedTile);
+        if (bag->getSize() != 0)
+        {
+          bag->getList()->addBack(tileInHand);
+          Node *pickedTile = bag->pickFromBag();
+          currentP->getHand()->addAt(k, pickedTile);
         }
         return true;
       }
@@ -404,43 +423,36 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       else if (surrounding[counter + 1] != nullptr &&
                surShape == surrounding[counter + 1]->getShape() && surShape == tile->getShape())
       {
-        std::cout << "Place TWO" << counter << std::endl;
-
         if (surrounding[counter + 2] == nullptr)
         {
-          std::cout << "run 3" << counter << std::endl;
           valid = true;
         }
         else if (surrounding[counter + 2]->getShape() == surShape)
         {
-          std::cout << "run FKDASF" << counter << std::endl;
           shapeOrColour = 2;
         }
       }
       else if (surrounding[counter + 2] != nullptr)
       {
-        std::cout << "Place THREE" << counter << std::endl;
+       
         if (shapeOrColour == 2 &&
             (surrounding[counter + 2]->getShape() == surShape) && (surrounding[counter + 3]->getShape() == surShape))
         {
-          std::cout << "run 71234" << counter << std::endl;
+          
           valid = true;
         }
         else if (shapeOrColour == 1 &&
                  (surrounding[counter + 2]->getColour() == surShape) && (surrounding[counter + 3]->getColour() == surShape))
         {
-          std::cout << "run 6" << counter << std::endl;
           valid = true;
         }
       }
       else if (surrounding[counter + 2] == nullptr && counter == 0)
       {
-        std::cout << "run  4" << counter << std::endl;
         horEm = true;
       }
       else if (surrounding[counter + 2] != nullptr && counter == 4)
       {
-        std::cout << "run  15353236" << counter << std::endl;
         verEm = true;
         valid = true;
       }
@@ -450,13 +462,11 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       if (surrounding[counter + 2]->getShape() == tile->getShape() &&
           (surrounding[counter + 2]->getShape() == surrounding[counter + 3]->getShape()))
       {
-        std::cout << "run 7" << counter << std::endl;
         valid = true;
       }
       else if (surrounding[counter + 2]->getColour() == tile->getColour() &&
                (surrounding[counter + 2]->getColour() == surrounding[counter + 3]->getColour()))
       {
-        std::cout << "run 8" << counter << std::endl;
         valid = true;
       }
     }
@@ -465,12 +475,10 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
 
       if (surrounding[counter + 2]->getShape() == tile->getShape())
       {
-        std::cout << "run 9" << counter << std::endl;
         valid = true;
       }
       else if (surrounding[counter + 2]->getColour() == tile->getColour())
       {
-        std::cout << "run 10" << counter << std::endl;
         valid = true;
       }
     }
@@ -483,7 +491,6 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   }
   if (horEm == true && verEm == false)
   {
-    std::cout << "run  4131" << counter << std::endl;
     return true;
   }
 
@@ -514,17 +521,14 @@ bool QwirkleGame::gameFinished()
 
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
-
   board[y][x] = tile;
 }
 
 void QwirkleGame::setCurrentPlayer(Player *player)
 {
-
   currentP = player;
 }
 Player *QwirkleGame::getCurrentPlayer()
 {
-
   return currentP;
 }

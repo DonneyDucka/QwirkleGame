@@ -87,9 +87,9 @@ void LinkedList::addBack(Tile *data)
 }
 /* delete selected tile pointer */
 void LinkedList::deleteNode(int i)
-{
+{  
   if (i == 0)
-  {
+  { 
     head = head->getNext();
     numOfNodes--;
   }
@@ -101,7 +101,8 @@ void LinkedList::deleteNode(int i)
   {
     findNode(i - 1)->setNext(findNode(i + 1));
     numOfNodes--;
-  }
+  } 
+
 }
 
 void LinkedList::deleteBack()
@@ -114,9 +115,8 @@ void LinkedList::deleteBack()
 
 void LinkedList::deleteFront()
 {
-  Node *temp = head;
+ 
   head = head->getNext();
-  temp->setNext(nullptr);
   numOfNodes--;
 }
 
@@ -130,7 +130,7 @@ void LinkedList::printLine()
 {
   current = head;
 
-  while (current->getNext() != nullptr)
+  while (current->getNext() != nullptr )
   {
     current->getTile()->printTile();
 
@@ -144,6 +144,11 @@ void LinkedList::printLine()
       current->getNext()->getTile()->printTile();
     }
     current = current->getNext();
+  }
+
+  if (head->getNext() == nullptr) 
+  {
+    std::cout<< head->getTile()->getTileDets();
   }
 
   std::cout << std::endl;
