@@ -73,7 +73,6 @@ bool QwirkleGame::placeTile(std::string placement)
   {
     y2 = placement.substr(9, 1);
     twoDigit = (10 * x2n) + (std::atoi(y2.c_str()));
-    std::cout << twoDigit;
     x2n = twoDigit;
   }
 
