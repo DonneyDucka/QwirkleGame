@@ -9,6 +9,7 @@ Player::Player(std::string name, int score)
   this->score = score;
 }
 
+//Returns the side of the player's hand
 int Player::countTilesInHand()
 {
   return hand->returnSize();
@@ -34,9 +35,9 @@ void Player::setScore(int points)
   score += points;
 }
 
+//fills the hands of the player
 void Player::fillHand(Bag *bag)
 {
-
   for (int i = 0; i < 6; i++)
   {
     hand->addNode(bag->pickFromBag()->getTile());

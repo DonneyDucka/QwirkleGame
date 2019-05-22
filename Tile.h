@@ -23,7 +23,6 @@ std::string getTileDets();
 
 void printTile();
 
-/* i made these private? they were in public */
 private:
    Colour colour;
    Shape  shape;

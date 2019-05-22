@@ -84,8 +84,6 @@ bool QwirkleGame::placeTile(std::string placement)
 
           currentP->getHand()->deleteNode(i);
 
-          //std::cout << bag->getSize();
-
           if (bag->getSize() != 0)
           {
             bag->getList()->addBack(tileInHand);
