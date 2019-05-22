@@ -10,8 +10,8 @@
  * METHODS INCLUDE:
  *   - place tile (on the board) -> put tile on board, remove from hand
  *
- *   - replace a tile 
- * 
+ *   - replace a tile
+ *
  *   - checking the trend (same shape or same color)
  *
  */
@@ -19,7 +19,6 @@
 QwirkleGame::QwirkleGame()
 {
   this->bag = new Bag();
-  //bag->fillBag();
 
   for (int i = 0; i < 26; i++)
   {
@@ -47,11 +46,11 @@ bool QwirkleGame::placeTile(std::string placement)
   bool check = false;
   //checking if the input/string was a valid length
   if ( placement.length() < 8 ) {
-   
+
    std::cout << "You have entered an invalid input" << std::endl;
 
-   return false; 
-  } 
+   return false;
+  }
   std::string tile = placement.substr(1, 2);
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
@@ -68,7 +67,7 @@ bool QwirkleGame::placeTile(std::string placement)
   int x2n = std::atoi(y.c_str());
   int i = 0;
  /*we need to check for double digit numbers since the board is larger than 10 done
-   done below  
+   done below
  */
   if (placement.length() > 9)
   {
@@ -76,22 +75,22 @@ bool QwirkleGame::placeTile(std::string placement)
     twoDigit = (10 * x2n) + (std::atoi(y2.c_str()));
     std::cout << twoDigit;
     x2n = twoDigit;
-  } 
- 
+  }
+
   if (p == false)
   {
     std::cout << "Incorrect tile entered";
     return false;
   }
-  else if (x2n < 26 && y2n < 26) //keeping the coordinates from going out of bounds 
+  else if (x2n < 26 && y2n < 26) //keeping the coordinates from going out of bounds
   {
     /*
     **PSEUDO**
-     
-     - check if the tile exist inside the players hand 
+
+     - check if the tile exist inside the players hand
      - obtain this tile and then check whether the tile is placement is valid (within qwirkle rules)
      - remove tile from the hand
-     - remove a tile from the bag after the tile is placed and add that tile to the hand 
+     - remove a tile from the bag after the tile is placed and add that tile to the hand
      - return true;
 
     */
@@ -128,7 +127,7 @@ bool QwirkleGame::placeTile(std::string placement)
       i++;
     }
   }
-//error messages incase user makes a mistake 
+//error messages incase user makes a mistake
   if (tileInHand == nullptr)
   {
     std::cout << "The tile you have entered does not exist" << std::endl;
@@ -154,7 +153,7 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   /*
     **PSUEDO**
 
-     - initiate decrementation and incremetation loops so that we can count the incoming tiles on each side of the 
+     - initiate decrementation and incremetation loops so that we can count the incoming tiles on each side of the
      tile we have placed
      - count tiles which are not null
      - if the we encountered a null in the chain the tracker is set to 0;
@@ -218,11 +217,11 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
     totalpoints += 6;
   }
 
-  //If a tile is placed in two lines, that tile we placed is 2 points 
-  if(trackHor > 0 && trackVer > 0) 
+  //If a tile is placed in two lines, that tile we placed is 2 points
+  if(trackHor > 0 && trackVer > 0)
   {
     totalpoints += 2;
-  } 
+  }
 
   //Setting the score
   player->setScore(totalpoints);
@@ -260,7 +259,7 @@ bool QwirkleGame::replaceTile(std::string replacement)
         {
           std::cout << "Bag is empty, unable to replace tile." << std::endl;
         }
-        
+
         return true;
       }
     }
@@ -434,31 +433,31 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   else
     check = true;
 
-  
+
   Tile *surrounding[8] =
       {board[y][x - 1], board[y][x - 2], board[y][x + 1], board[y][x + 2], board[y + 1][x], board[y + 2][x], board[y - 1][x], board[y - 2][x]};
 //1st block to the left, 2nd to the left, 1st to the right, 2nd block on the right, 1st block on the top, 2nd block the top, 1st block on the bottom, 2nd block on the bottom
-  // the surroundings of the block are placed inside a 
+  // the surroundings of the block are placed inside a
   int shapeOrColour = 0;
 
   int counter = 0;
   bool valid = false;
   bool horEm = false;
   bool verEm = false;
-  
-  /*  
+
+  /*
     **PSEUDO**
     -Iterate the through the surroudings array, using the 1st and the 4th block as our basis for comparison
-    -  As we iterate we compare the the 1st block to the left, 
+    -  As we iterate we compare the the 1st block to the left,
       if (1st block is null){
       move on to the other side
-    } else { hold the trend of the left side and compare with the other} 
-    
+    } else { hold the trend of the left side and compare with the other}
+
     - If (conditions are met) {
-      we can move on to the next check the verticals; 
+      we can move on to the next check the verticals;
     }
 
-    - Since we use on the 1st and 4th elements in the surroudings array iterate the counter by 4. 
+    - Since we use on the 1st and 4th elements in the surroudings array iterate the counter by 4.
     -  Using the 4th element in the surroundings array, we can filter to the to see if the verticals are valid
     - If all is valid, valid is returned as true, else a false is returned to the placement method.
   */
@@ -471,19 +470,19 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       Shape surShape = surrounding[counter]->getShape();
       shapeOrColour = 0;
       if (surColour != tile->getColour() && surShape != tile->getShape())
-      { // if there is no corresponding match we end the while early  
+      { // if there is no corresponding match we end the while early
         return false;
       }
       else if (surrounding[counter + 1] != nullptr &&
                surColour == surrounding[counter + 1]->getColour() && surColour == tile->getColour())
       {
         if (surrounding[counter + 2] == nullptr)
-        { 
+        {
           valid = true;
         }
         else if (surrounding[counter + 2]->getColour() == surColour)
         {
-          
+
           shapeOrColour = 1;
         }
       }
@@ -501,11 +500,11 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       }
       else if (surrounding[counter + 2] != nullptr)
       {
-       
+
         if (shapeOrColour == 2 &&
             (surrounding[counter + 2]->getShape() == surShape) && (surrounding[counter + 3]->getShape() == surShape))
         {
-          
+
           valid = true;
         }
         else if (shapeOrColour == 1 &&
@@ -523,7 +522,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
         verEm = true;
         valid = true;
       }
-    }/*we must check whether the tile on the opposite sides are valid 
+    }/*we must check whether the tile on the opposite sides are valid
        - and then check the continual block next to it to find whether the pattern is consistent on both sides (left right)/(up down)
      */
     else if (surrounding[counter + 2] != nullptr && surrounding[counter + 3] != nullptr)
@@ -558,7 +557,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   {
     return false;
   }
- /* Because we check the horizontals first, 
+ /* Because we check the horizontals first,
     we need to save a boolean to check tell if the horizontal row is emtpy,
     if the vertical is not empty it can still place.
  */
