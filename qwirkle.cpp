@@ -174,6 +174,8 @@ void newGame()
   */
 }
 
+
+//Method calls saving the game
 void saveGame(QwirkleGame *g, std::string string2)
 {
   outfile.open(string2 + ".txt");
