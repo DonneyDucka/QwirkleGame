@@ -219,6 +219,11 @@ bool QwirkleGame::replaceTile(std::string replacement)
           Node *pickedTile = bag->pickFromBag();
           currentP->getHand()->addAt(k, pickedTile);
         }
+        else
+        {
+          std::cout << "Bag is empty, unable to replace tile." << std::endl;
+        }
+        
         return true;
       }
     }
