@@ -30,8 +30,10 @@ public:
   void setBoard(int x, int y, Tile* tile);
   void setCurrentPlayer(Player* player);
   Player* getCurrentPlayer();
- 
-  private:
+
+  bool gameFinished();
+
+private:
   int letterToNumber(char a);
   Tile *board[27][27];
   std::string boardToString;

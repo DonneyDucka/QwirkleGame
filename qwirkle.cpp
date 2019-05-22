@@ -27,16 +27,15 @@ std::string line;
 std::ofstream outfile;
 std::ifstream infile;
 
-int x_count = 0;
-int y_count = 0;
-int loopCount = 0;
+
+int playerTurn = 0;
 
 int main(void)
 {
   std::cout << std::endl;
   std::cout << "Welcome to Qwirkle!"
             << "\n"
-            << "--------------------" << std::endl;
+            << "------------------------------------" << std::endl;
   while (input != "4")
   {
     std::cout
@@ -228,6 +227,10 @@ void saveGame(QwirkleGame *g, std::string string2)
 void loadGame()
 {
 
+  int x_count = 0;
+  int y_count = 0;
+  int loopCount = 0;
+
   std::cout << "Enter the filename from which to load a game" << std::endl;
   std::cin >> fileName;
 
@@ -265,11 +268,14 @@ void loadGame()
         {
           while (stream >> tile)
           {
+            std::cout << tile.at(0) << tile.at(1) << std::endl;
+            
             Tile *t = new Tile(tile.at(0), (int)tile.at(1) - 48);
+
             p->getPlayers().at(noOfPlayers - 1)->getHand()->addNode(t);
+            
           }
         }
-
         //the 33rd line occupy the tiles in the bag
         if (counter == 34)
         {
@@ -312,24 +318,23 @@ void loadGame()
           }
         }
       }
-      if (counter == 34)
-      {
 
-        for (Player *pla : p->getPlayers())
+      if (counter == 35)
+      {
+        for (int i = 0; i < p->getPlayers().size(); i++)
         {
-          if (pla->getName() == line)
+          if (p->getPlayers()[i]->getName() == line)
           {
-            p->setCurrentPlayer(pla);
+            playerTurn = i;
+            p->setCurrentPlayer(p->getPlayers()[i]);
           }
         }
       }
 
       counter++;
-
-      //std::cout << line << std::endl;
     }
 
-    p->printBoard();
+    //p->printBoard();
 
     infile.close();
 
@@ -348,21 +353,18 @@ void loadGame()
 void runGame(QwirkleGame *g)
 {
 
-  //int count = 0;
-
-  while (g->getBag()->getSize() != 0)
+  while (!g->gameFinished())
   {
-    for (Player *player : g->getPlayers())
-    { 
-      
-       g->setCurrentPlayer(player);
-      
+      //This if loop will only be called at new game, not load game as load game sets the player's turn
+      if(g->getCurrentPlayer() == nullptr)
+      {
+        //Sets to be the first player in the loop
+        Player *player = g->getPlayers()[0];
+        g->setCurrentPlayer(player);
+      }
 
-      // if (g->getCurrentPlayer()->getName() == player->getName())
-      // {
         //Displaying the current player's turn
-
-        std::cout << player->getName() << ", it's your turn" << '\n'
+        std::cout << g->getCurrentPlayer()->getName() << ", it's your turn \nNeed some help? If so, type 'help'!" << '\n'
                   << std::endl;
 
         //Displaying the scoreboard
@@ -379,8 +381,11 @@ void runGame(QwirkleGame *g)
         std::cout << std::endl;
 
         //Printing the current players hand
+        std::cout << std::endl; //2 newlines for neatness
         std::cout << "Your hand is.." << std::endl;
-        player->printHand();
+        g->getCurrentPlayer()->printHand();
+        std::cout << std::endl;
+
         bool moveMade = false;
 
         while (moveMade == false)
@@ -413,7 +418,22 @@ void runGame(QwirkleGame *g)
           else if (string1 == "save")
           {
             saveGame(g, string2);
-            moveMade = true;
+            std::cout << "It is still your turn, " + g->getCurrentPlayer()->getName() << "\n" << std::endl;
+            std::cout << "Your hand is.." << std::endl;
+            g->getCurrentPlayer()->printHand();
+            std::cout << std::endl;
+          }
+          else if( string1 == "help")
+          {
+            std::cout << std::endl;
+            std::cout << "                                                       HELP!" << std::endl;
+            std::cout << "----------------------------------------------------------------------------------------------------------------------------" << std::endl;
+            std::cout << "place   <tile> at <coordinate> - will place your chosen tile on the board, counts as a move" << std::endl;
+            std::cout << "replace <tile>                 - your tile will be placed in the bag and you will draw a new tile, counts as a move" << std::endl;
+            std::cout << "save <file name>               - your tile will be placed in the bag and you will draw a new tile, DOES NOT count as a move" << std::endl;
+            std::cout << "----------------------------------------------------------------------------------------------------------------------------" << std::endl;
+            std::cout << std::endl;
+            std::cout << "It is still your turn, " + g->getCurrentPlayer()->getName() << "\nPlease make a move!" << std::endl;
           }
           else
           {
@@ -421,21 +441,48 @@ void runGame(QwirkleGame *g)
           }
         }
         //Reprinting the board
+        std::cout << std::endl;
         g->printBoard();
+        std::cout << std::endl;
 
-        // if (g->getPlayers()[count + 1] != NULL)
-        // {
-        //   g->setCurrentPlayer(g->getPlayers()[count + 1]);
-        //   count++;
-        // }
-        // else
-        // {
-        //   g->setCurrentPlayer(g->getPlayers()[0]);
-        //   count = 0;
-        // }
-      //}
+        //Alternating between the players and ensuring that the vector does not go out of bounds
+        if(playerTurn == g->getPlayers().size()-1)
+        {
+          playerTurn = 0;
+          g->setCurrentPlayer(g->getPlayers()[playerTurn]);
+        }
+        else
+        {
+          playerTurn++;
+          g->setCurrentPlayer(g->getPlayers()[playerTurn]);
+        }
     }
-  }
+
+
+    //The while loop ends when the game has finished
+    std::cout << "Game over!" << std::endl;
+    std::cout << "------------------------------------" << std::endl;
+
+    int temp = 0;
+    std::string winner;
+
+    //Iterates to find who has the highest score 
+    for(Player *p: g->getPlayers())
+    {
+      if(p->getScore() == temp)
+      {
+        winner = "Draw";
+      }
+      else if(p->getScore() > temp)
+      {
+        temp = p->getScore();
+        winner = "Player " + p->getName() + " wins.";
+      }
+
+      std::cout << "Score for " << p->getName() << ": " << p->getScore() << std::endl; 
+    }
+
+    std::cout << winner << std::endl; 
 }
 
 //Method displays student info

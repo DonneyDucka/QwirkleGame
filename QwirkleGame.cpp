@@ -315,8 +315,8 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     if (board[y][x - j] == nullptr && trackL == 0)
     {
       trackL = j - 1;
-     
-    } 
+
+    }
     else if (board[y][x - j] != nullptr && (board[y][x-j]->getTileDets() == tile->getTileDets())) {
       return false;
     }
@@ -348,22 +348,22 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   if ((trackD + trackU) > 6 || (trackL + trackR) > 6)
   {
     return false;
-  
+
   } else check = true;
-   
+
 
   // left            right            bottom           top
   Tile *surrounding[8] =
       {board[y][x - 1], board[y][x - 2], board[y][x + 1], board[y][x + 2], board[y + 1][x], board[y + 2][x], board[y - 1][x], board[y - 2][x]};
 
   int shapeOrColour = 0;
- 
-     int counter = 0;  
+
+     int counter = 0;
      bool valid = false;
      bool horEm = false;
      bool verEm = false;
   while (counter < 5)
-  { 
+  {
     if (surrounding[counter] != nullptr)
     {  valid = false;
       Colour surColour = surrounding[counter]->getColour();
@@ -375,7 +375,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       }
       else if (surrounding[counter + 1] != nullptr &&
                surColour == surrounding[counter + 1]->getColour() && surColour == tile->getColour())
-      {  
+      {
         std::cout << "Place ONE" << counter<< std::endl;
         if (surrounding[counter + 2] == nullptr)
         { std::cout << "run 1" << counter<< std::endl;
@@ -388,8 +388,8 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       }
       else if (surrounding[counter + 1] != nullptr &&
                surShape == surrounding[counter + 1]->getShape() && surShape == tile->getShape())
-      { std::cout << "Place TWO" << counter<< std::endl;    
-        
+      { std::cout << "Place TWO" << counter<< std::endl;
+
         if (surrounding[counter + 2] == nullptr)
         { std::cout << "run 3" << counter<< std::endl;
           valid = true;
@@ -420,7 +420,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
         valid = true;
       }
 
-    } 
+    }
     else if (surrounding[counter+2] != nullptr && surrounding[counter+3] != nullptr) {
       if ( surrounding[counter + 2]->getShape() == tile->getShape() &&
           (surrounding[counter + 2]->getShape() == surrounding[counter + 3]->getShape()))
@@ -433,7 +433,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
           valid=  true;
         }
     } else if (surrounding[counter+2] != nullptr && surrounding[counter+3] == nullptr) {
-     
+
       if ( surrounding[counter + 2]->getShape() == tile->getShape())
         { std::cout << "run 9" << counter<< std::endl;
           valid = true;
@@ -442,11 +442,11 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
         { std::cout << "run 10" << counter<< std::endl;
           valid = true;
         }
-    
-    }  
+
+    }
     counter += 4;
   }
-  
+
   if (board[y][x] != nullptr) {
     return false;
   }
@@ -457,6 +457,31 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
 
   return valid;
 }
+
+bool QwirkleGame::gameFinished()
+{
+
+bool playerHandEmpty = false;
+
+  for(int i = 0; i < players.size(); i++)
+  {
+    if(players[i]->getHand()->returnSize() == 0)
+    {
+      players[i]->setScore(6);
+      playerHandEmpty = true;
+    }
+  }
+
+  if(bag->getSize() == 0 && playerHandEmpty)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+
+
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
 
@@ -472,4 +497,78 @@ Player *QwirkleGame::getCurrentPlayer()
 {
 
   return currentP;
+}
+int QwirkleGame::trendCheck(int y, int x, Tile* tile){
+
+ int hor1,hor2 = 0;
+ int ver1,ver2 = 0;
+ int finV,finH =0;
+ Tile *temp1,*temp2,*temp3,*temp4 = nullptr;
+
+  for (int j = 1; j < 3; j++)
+  {
+    if(j == 1) {
+     temp1 = board[y][x - j];
+     temp2 = board[y][x + j];
+     temp3 = board[y-j][x];
+     temp4 = board[y+j][x];
+    }
+
+
+    if (board[y][x - j] != nullptr && temp1 != nullptr )
+    {
+      if (board[y][x - j]->getColour() == temp1->getColour()){
+        hor1 = 1;
+      } else if (board[y][x - j]->getShape() == temp1->getShape()){
+        hor1 = 2;
+      }
+    }
+    if (board[y][x + j] != nullptr  && temp2 != nullptr) {
+
+       if (board[y][x + j]->getColour() == temp2->getColour()){
+        hor2 = 1;
+      } else if (board[y][x + j]->getShape() == temp2->getShape()){
+        hor2 = 2;
+      }
+    }
+    if (board[y + j][x] != nullptr  && temp3 != nullptr)
+    {
+       if (board[y+j][j]->getColour() == temp3->getColour()){
+        ver1 = 1;
+      } else if (board[y+j][x]->getShape() == temp3->getShape()){
+        ver1 = 2;
+      }
+    }
+    if (board[y-j][x] != nullptr  && temp4 != nullptr) {
+       if (board[y-j][x]->getColour() == temp4->getColour()){
+        ver2 = 1;
+       } else if (board[y-j][x]->getShape() == temp4->getShape()){
+        ver2 = 2;
+      }
+    }
+  }
+
+if (hor1 == 1 && hor1 == hor2) {
+ finH = 1;
+} else if ((hor1 == 1 && hor2 == 0) || (hor1 == 0 && hor2 == 1 )){
+finH = 1;
+} else if ((hor1 == 2 && hor2 == 0) || (hor1 == 0 && hor2 == 2 )){
+finH = 2;
+} else if (hor1 == 2 && hor1 == hor2) {
+finH = 2;
+} finH = 0;
+
+if (ver1 == 1 && ver1 == hor2) {
+ finV = 1;
+} else if ((ver1 == 1 && ver2 == 0) || (ver1 == 0 && ver2 == 1 )){
+finV = 1;
+} else if ((hor1 == 2 && hor2 == 0) || (hor1 == 0 && hor2 == 2 )){
+finV = 2;
+} else if (hor1 == 2 && hor1 == hor2) {
+finV = 2;
+} else finV = 0;
+
+return finV + finH;
+
+
 }
