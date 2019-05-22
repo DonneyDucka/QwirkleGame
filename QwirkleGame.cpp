@@ -45,34 +45,56 @@ QwirkleGame::~QwirkleGame()
 bool QwirkleGame::placeTile(std::string placement)
 {
   bool check = false;
+  //checking if the input/string was a valid length
+  if ( placement.length() < 8 ) {
+   
+   std::cout << "You have enter an invalid input" << std::endl;
+
+   return false; 
+  } 
   std::string tile = placement.substr(1, 2);
   std::string x = placement.substr(7, 1);
   std::string y = placement.substr(8, 1);
   std::string y2;
   int twoDigit;
-
+  /*
+  convert the letter to number with the letter2number method
+  we need to hold the tile in the hand so it can be used by the methods
+  */
   std::string code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   bool p = (code.find(x) != std::string::npos);
   Tile *tileInHand = nullptr;
   int y2n = letterToNumber(*x.c_str());
   int x2n = std::atoi(y.c_str());
   int i = 0;
-
+ /*we need to check for double digit numbers since the board is larger than 10 done
+   done below  
+ */
   if (placement.length() > 9)
   {
     y2 = placement.substr(9, 1);
     twoDigit = (10 * x2n) + (std::atoi(y2.c_str()));
     std::cout << twoDigit;
     x2n = twoDigit;
-  }
-
+  } 
+ 
   if (p == false)
   {
     std::cout << "incorrect tile entered";
     return false;
   }
-  else if (x2n < 26 && y2n < 26)
+  else if (x2n < 26 && y2n < 26) //keeping the coordinates from going out of bounds 
   {
+    /*
+    **PSEUDO**
+     
+     - check if the tile exist inside the players hand 
+     - obtain this tile and then check whether the tile is placement is valid (within qwirkle rules)
+     - remove tile from the hand
+     - remove a tile from the bag after the tile is placed and add that tile to the hand 
+     - return true;
+
+    */
     while (tileInHand == nullptr && i < 6)
     {
 
@@ -106,7 +128,7 @@ bool QwirkleGame::placeTile(std::string placement)
       i++;
     }
   }
-
+//error messages incase user makes a mistake 
   if (tileInHand == nullptr)
   {
     std::cout << "The tile you have entered does not exist" << std::endl;
@@ -129,6 +151,14 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
 {
   int trackVer = 0;
   int trackHor = 0;
+  /*
+    **PSUEDO**
+
+     - initiate decrementation and incremetation loops so that we can count the incoming tiles on each side of the 
+     tile we have placed
+     - count tiles which are not null
+     - if the we encountered a null in the chain the tracker is set to 0;
+   */
 
   for (int i = 0; i < y; i++)
   {
@@ -352,7 +382,9 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   /*  The for loop simutaneously tracks the rows and coloumns from the positions of the placed
   tile.
    if the length is obtained during the loop in any direction is greater than 5 the tile cannot be placed
-   hence false is returned;
+   hence false is returned; (we include 6 in the if statement because we must count the tile placed as well in the chain);
+   (similiar logic to the allocate points method)
+
   */
 
   for (int j = 1; j < 8; j++)
@@ -430,7 +462,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     - If all is valid, valid is returned as true, else a false is returned to the placement method.
   */
   while (counter < 5)
-  { 
+  { //checking if the 1st or 4th block is null
     if (surrounding[counter] != nullptr)
     {
       valid = false;
@@ -438,7 +470,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
       Shape surShape = surrounding[counter]->getShape();
       shapeOrColour = 0;
       if (surColour != tile->getColour() && surShape != tile->getShape())
-      {
+      { // if there is no corresponding match we end the while early  
         return false;
       }
       else if (surrounding[counter + 1] != nullptr &&
@@ -490,7 +522,9 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
         verEm = true;
         valid = true;
       }
-    }
+    }/*we must check whether the tile on the opposite sides are valid 
+       - and then check the continual block next to it to find whether the pattern is consistent on both sides (left right)/(up down)
+     */
     else if (surrounding[counter + 2] != nullptr && surrounding[counter + 3] != nullptr)
     {
       if (surrounding[counter + 2]->getShape() == tile->getShape() &&

@@ -57,14 +57,18 @@ Node *LinkedList::findNode(int f)
 void LinkedList::addAt(int i, Node *node)
 {
   if (i > 0 && i < numOfNodes)
-  { 
+  { /* find the node  
+    and then set the pointers according 
+    */ 
     Node *ka = findNode(i);
     findNode(i - 1)->setNext(node);
     findNode(i - 1)->getNext()->setNext(ka);
     numOfNodes++;
   }
   else if (i == 0 && head != nullptr)
-  { 
+  { /*additional cases where we might 
+    be at the head
+    */
     node->setNext(head);
     head = node;
     numOfNodes++;
