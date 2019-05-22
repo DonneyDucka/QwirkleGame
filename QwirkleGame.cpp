@@ -150,7 +150,8 @@ bool QwirkleGame::placeTile(std::string placement)
 void QwirkleGame::allocatePoints(int x, int y, Player *player)
 {
   int trackVer = 0;
-  int trackHor = 0;
+  int trackHor = 0; 
+
   /*
     **PSUEDO**
 
@@ -223,6 +224,11 @@ void QwirkleGame::allocatePoints(int x, int y, Player *player)
   {
     totalpoints += 2;
   } 
+ if(trackVer == 0 && trackHor == 0) {
+
+  totalpoints  = 1;
+ }
+
 
   //Setting the score
   player->setScore(totalpoints);
@@ -378,7 +384,7 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   if (empty)
   {
     return true;
-  }
+  } 
   /*  The for loop simutaneously tracks the rows and coloumns from the positions of the placed
   tile.
    if the length is obtained during the loop in any direction is greater than 5 the tile cannot be placed
@@ -439,11 +445,10 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
 //1st block to the left, 2nd to the left, 1st to the right, 2nd block on the right, 1st block on the top, 2nd block the top, 1st block on the bottom, 2nd block on the bottom
   // the surroundings of the block are placed inside a 
   int shapeOrColour = 0;
+  int shapeOrColour2 = 0;
 
   int counter = 0;
   bool valid = false;
-  bool horEm = false;
-  bool verEm = false;
   
   /*  
     **PSEUDO**
@@ -464,94 +469,142 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
   while (counter < 5)
   { //checking if the 1st or 4th block is null
     if (surrounding[counter] != nullptr)
-    {
-      valid = false;
+    {  
       Colour surColour = surrounding[counter]->getColour();
       Shape surShape = surrounding[counter]->getShape();
-      shapeOrColour = 0;
-      if (surColour != tile->getColour() && surShape != tile->getShape())
-      { // if there is no corresponding match we end the while early  
-        return false;
-      }
-      else if (surrounding[counter + 1] != nullptr &&
-               surColour == surrounding[counter + 1]->getColour() && surColour == tile->getColour())
+      if (surrounding[counter + 1] != nullptr) {
+        
+       if ( surColour == surrounding[counter + 1]->getColour())
       {
         if (surrounding[counter + 2] == nullptr)
-        { 
-          valid = true;
-        }
-        else if (surrounding[counter + 2]->getColour() == surColour)
-        {
-          
+        { if (counter == 0) {
           shapeOrColour = 1;
+          } else if (counter == 4) {
+          shapeOrColour2 = 1;
+          }
+        }
+        else if (surrounding[counter + 2]->getColour() == surColour && surrounding[counter + 3]->getColour() == surColour)
+        {  
+          if (counter == 0) {
+          shapeOrColour = 1;
+          } else if (counter == 4) {
+          shapeOrColour2 = 1;
+          }
         }
       }
-      else if (surrounding[counter + 1] != nullptr &&
-               surShape == surrounding[counter + 1]->getShape() && surShape == tile->getShape())
+      else if (surShape == surrounding[counter + 1]->getShape() )
       {
         if (surrounding[counter + 2] == nullptr)
         {
-          valid = true;
+          if (counter == 0) {
+          shapeOrColour = 2;
+          } else if (counter == 4) {
+          shapeOrColour2 = 2;
+          }
         }
         else if (surrounding[counter + 2]->getShape() == surShape)
         {
+          if (counter == 0) {
           shapeOrColour = 2;
+          } else if (counter == 4) {
+          shapeOrColour2 = 2;
+          }
         }
       }
-      else if (surrounding[counter + 2] != nullptr)
-      {
-       
-        if (shapeOrColour == 2 &&
-            (surrounding[counter + 2]->getShape() == surShape) && (surrounding[counter + 3]->getShape() == surShape))
+      }
+      if (surrounding[counter + 1] == nullptr && surrounding[counter + 2] != nullptr) 
+      { 
+        if ((surrounding[counter + 2]->getShape() == surShape) && (surrounding[counter + 3]->getShape() == surShape))
         {
-          
-          valid = true;
+         if (counter == 0) {
+          shapeOrColour = 2;
+          } else if (counter == 4) {
+          shapeOrColour2 = 2;
+          }
         }
-        else if (shapeOrColour == 1 &&
-                 (surrounding[counter + 2]->getColour() == surShape) && (surrounding[counter + 3]->getColour() == surShape))
+        else if ((surrounding[counter + 2]->getColour() == surColour) && (surrounding[counter + 3]->getColour() == surColour))
         {
-          valid = true;
+          if (counter == 0) {
+          shapeOrColour = 1;
+          } else if (counter == 4) {
+          shapeOrColour2 = 1;
+          }
         }
-      }
-      else if (surrounding[counter + 2] == nullptr && counter == 0)
-      {
-        horEm = true;
-      }
-      else if (surrounding[counter + 2] != nullptr && counter == 4)
-      {
-        verEm = true;
-        valid = true;
-      }
-    }/*we must check whether the tile on the opposite sides are valid 
-       - and then check the continual block next to it to find whether the pattern is consistent on both sides (left right)/(up down)
-     */
-    else if (surrounding[counter + 2] != nullptr && surrounding[counter + 3] != nullptr)
-    {
-      if (surrounding[counter + 2]->getShape() == tile->getShape() &&
-          (surrounding[counter + 2]->getShape() == surrounding[counter + 3]->getShape()))
-      {
-        valid = true;
-      }
-      else if (surrounding[counter + 2]->getColour() == tile->getColour() &&
-               (surrounding[counter + 2]->getColour() == surrounding[counter + 3]->getColour()))
-      {
-        valid = true;
       }
     }
-    else if (surrounding[counter + 2] != nullptr && surrounding[counter + 3] == nullptr)
+    /*we must check whether the tile on the opposite sides are valid 
+       - and then check the continual block next to it to find whether the pattern is consistent on both sides (left right)/(up down)
+     */
+    else if (surrounding[counter + 2] == nullptr)
     {
-
-      if (surrounding[counter + 2]->getShape() == tile->getShape())
+      if (counter == 0) {
+          shapeOrColour = 0;
+          } else if (counter == 4) {
+          shapeOrColour2 = 0;
+       }
+    }
+    else if (surrounding[counter + 3] != nullptr)
+    {
+      if (surrounding[counter + 2]->getShape() == surrounding[counter + 3]->getShape())
       {
-        valid = true;
+          if (counter == 0) {
+          shapeOrColour = 2;
+          } else if (counter == 4) {
+          shapeOrColour2 = 2;
+          }
       }
-      else if (surrounding[counter + 2]->getColour() == tile->getColour())
+      else if (surrounding[counter + 2]->getColour() == surrounding[counter + 3]->getColour())
       {
-        valid = true;
+          if (counter == 0) {
+          shapeOrColour = 1;
+          } else if (counter == 4) {
+          shapeOrColour2 = 1;
+          }
       }
+    } else {
+          if (counter == 0) {
+          shapeOrColour = 0;
+          } else if (counter == 4) {
+          shapeOrColour2 = 0;
+          }
     }
     counter += 4;
   }
+  std::cout <<  shapeOrColour << " " << shapeOrColour2 << std::endl;
+  if(shapeOrColour == shapeOrColour2) {
+    valid = true;
+  } else if ((shapeOrColour == 0) || (shapeOrColour2 == 0)){
+    
+    if(surrounding[0] != nullptr || surrounding[2] != nullptr) {
+        if(shapeOrColour == 1 ) 
+        {
+          if (tile->getColour() == surrounding[0]->getColour() || tile->getColour() == surrounding[2]->getShape()) {
+            valid = true;
+           }
+        }
+        if (shapeOrColour == 2) 
+        {
+        if (tile->getShape() == surrounding[0]->getShape() || tile->getShape() == surrounding[2]->getShape()) 
+        { 
+        valid = true;
+        }
+        }
+         if(shapeOrColour2 == 1 ) 
+        {
+          if (tile->getColour() == surrounding[4]->getColour() || tile->getColour() == surrounding[6]->getShape()) {
+            valid = true;
+           }
+        }
+        if (shapeOrColour2 == 2) 
+        {
+           if (tile->getShape() == surrounding[4]->getShape() || tile->getShape() == surrounding[6]->getShape()) 
+            { 
+             valid = true;
+            }
+        }
+    }
+  } else valid = false;
+
  // a comparison to see whether the spot has been taken, if it has you cannot place a tile there.
   if (board[y][x] != nullptr)
   {
@@ -561,11 +614,6 @@ bool QwirkleGame::checkPlacement(int y, int x, Tile *tile)
     we need to save a boolean to check tell if the horizontal row is emtpy,
     if the vertical is not empty  it can still place.
  */
-  if (horEm == true && verEm == false)
-  {
-    return true;
-  }
-
   return valid;
 }
 
@@ -592,7 +640,8 @@ bool QwirkleGame::gameFinished()
   return false;
 }
 
-//sets the position of the board to the tile meant to be placed
+/*sets the position of the board to the tile meant to be placed*/
+
 void QwirkleGame::setBoard(int x, int y, Tile *tile)
 {
   board[y][x] = tile;
